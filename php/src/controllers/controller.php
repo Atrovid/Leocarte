@@ -14,7 +14,9 @@ function configDatabase() {
 	require('src/views/viewConfig.php');
 }
 
-
+function error404(){
+	require('src/views/viewError404.php');
+}
 
 
 

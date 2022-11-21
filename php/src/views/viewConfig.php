@@ -1,10 +1,5 @@
 <?php
 
-
-
-echo "Hello World !";
-
-
-
+echo "The database was created !";
 
 ?>
