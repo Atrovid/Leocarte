@@ -20,12 +20,16 @@ class Model {
      */
     public function connect() {
         if ($this->pdo == null) {
-            $dsn = "";
-            $user = "";
-            $password = "";
+            $cf = parse_ini_file('config.ini');
+            $dsn = "pgsql:host=".$cf['db_url'].";port=".$cf['db_port'].";dbname=".$cf['db_name'].";";
+            $user = $cf['db_user'];
+            $password = $cf['db_password'];
             // make a database connection
-            $this->pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-
+            try {
+                $this->pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+            } catch (PDOException $e) {
+                throw new Exception($e->getMessage());
+            }
         }
         return $this->pdo;
     }
