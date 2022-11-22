@@ -9,7 +9,13 @@ $db = (new Model());
 
 function configDatabase() {
     $db = (new Model());
-	$db->initDatabase();
+	$db->initStudentsDB();
+	$db->initClassesDB();
+	$db->initRoomsDB();
+	$db->initLecturersDB();
+	$db->initSubjectsDB();
+	$db->initAttendancesDB();
+	//$db->dropTable('attendances');
 
 	require('src/views/viewConfig.php');
 }
