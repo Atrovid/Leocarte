@@ -1,5 +1,5 @@
 <?php
 
-echo "The database was created !";
+echo "The database was created !\r\n";
 
 ?>
