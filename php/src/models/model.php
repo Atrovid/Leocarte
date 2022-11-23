@@ -53,11 +53,15 @@ class Model {
     public function initClassesDB(){
         $statements = [
             'CREATE TABLE IF NOT EXISTS classes(
-            lecturer_id CHAR(100) NOT NULL,
-            room_id CHAR(100) NOT NULL,
-            subject_id CHAR(100) NOT NULL,
+            class_id SERIAL PRIMARY KEY,
+            lecturer_id INTEGER NOT NULL,
+            room_id INTEGER NOT NULL,
+            subject_id INTEGER NOT NULL,
+            FOREIGN KEY (lecturer_id) REFERENCES lecturers(lecturer_id),
+            FOREIGN KEY (room_id) REFERENCES rooms(room_id),
+            FOREIGN KEY (subject_id) REFERENCES subjects(subject_id),
             start_hour TIME(0) NOT NULL,
-            finish_hour TIME(0) NOT NULL
+            end_hour TIME(0) NOT NULL
             );'
         ];
         foreach($statements as $statement){
@@ -110,8 +114,10 @@ class Model {
     public function initAttendancesDB(){
         $statements = [
             'CREATE TABLE IF NOT EXISTS attendances(
-            course_id CHAR(100) NOT NULL,
-            student_id CHAR(100) NOT NULL,
+            class_id INTEGER NOT NULL,
+            student_id INTEGER NOT NULL,
+            FOREIGN KEY(class_id) REFERENCES classes(class_id),
+            FOREIGN KEY(student_id) REFERENCES students(student_id),
             attending BOOLEAN NOT NULL
             );'
         ];
@@ -122,7 +128,7 @@ class Model {
     }
 
     public function dropTable($nom) {
-        $query = "DROP TABLE ".$nom;
+        $query = "DROP TABLE IF EXISTS ".$nom;
         $this->pdo->exec($query);
     }
 }
