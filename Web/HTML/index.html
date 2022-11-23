@@ -21,32 +21,69 @@
 </header>
 
 <body class="p-3 m-0 border-0 bd-example">
-    <form id="Formulaire">
+    <form id="Formulaire" class="was-validated">
         <div class="mb-3">
             <label for="matiere_cours" class="form-label">Matière enseignée : </label>
-            <input type="text" class="form-control" id="matiere_cours">
+            <input type="text" class="form-control" id="matiere_cours" placeholder="Enter the subject of the course"
+                name="subject" required>
+            <div class="valid-feedback">Valid</div>
+            <div class="invalid-feedback">Please fill out this field</div>
         </div>
-        <div class="mb-3">
-            <label for="horaire_debut" class="form-label">Horaire de début : </label>
-            <input type="text" class="form-control" id="horaire_debut">
-        </div>
-        <div class="mb-3">
-            <label for="horaire_fin" class="form-label">Horaire de fin : </label>
-            <input type="text" class="form-control" id="horaire_fin">
+        <div class="row">
+            <div class="col">
+                <label for="horaire_debut" class="form-label">Horaire de début : </label>
+                <input type="text" class="form-control" id="horaire_debut" placeholder="Enter the begin of the course"
+                    name="begin_hour" required pattern="([1-9]|([1-2][0-3]))h[0-59][0-59]">
+                <div class="valid-feedback">Valid</div>
+                <div class="invalid-feedback">Please fill out this field</div>
+            </div>
+            <div class="col">
+                <label for="horaire_fin" class="form-label">Horaire de fin : </label>
+                <input type="text" class="form-control" id="horaire_fin" placeholder="Enter the end of the course"
+                    name="end_course" required pattern="([1-9]|([1-2][0-3]))h[0-59][0-59]">
+                <div class=" valid-feedback">Valid</div>
+                <div class="invalid-feedback">Please fill out this field</div>
+            </div>
         </div>
         <button type="button" class="btn btn-primary" id="envoyer">Envoyer</button>
     </form>
 
-    <!-- End Example Code -->
-
-    <article id="invisible">
-        <article id="informations">
-            <h2>Information sur le cours</h2>
-
-        </article>
-        <article class="ensembleEleves">
-        </article>
-    </article>
+    <div class="container-fluid mt-3" id="invisible">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-3 bg-info text-white p-3">
+                    <article id="informations">
+                        <h2>Information sur le cours</h2>
+                    </article>
+                    <button type="button" class="btn btn-outline-dark">Convert to a file</button>
+                </div>
+                <div class="col-9 p-3">
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Firstname</th>
+                                <th>Lastname</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John</td>
+                                <td>Doe</td>
+                            </tr>
+                            <tr>
+                                <td>Mary</td>
+                                <td>Moe</td>
+                            </tr>
+                            <tr>
+                                <td>July</td>
+                                <td>Dooley</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

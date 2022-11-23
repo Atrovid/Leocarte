@@ -26,3 +26,7 @@ body {
 #invisible {
     visibility: hidden;
 }
+
+button {
+    padding: 2%;
+}
