@@ -7,7 +7,7 @@ require_once('src/models/model.php');
 $db = (new Model());
 
 
-function configDatabase() {
+function createDatabase() {
     $db = (new Model());
 	$db->initLecturersDB();
 	$db->initStudentsDB();
@@ -27,6 +27,26 @@ function dropTable(){
 	$db->dropTable('rooms');
 	$db->dropTable('lecturers');
 	$db->dropTable('students');
+	
+	require('src/views/viewDelete.php');
+}
+
+function addInfoIntoDatabase(){
+	$db = (new Model());
+	$db->addIntoStudentsDB(2,"Alix","Baptiste",2); 
+	require('src/views/viewAddInfo.php');
+}
+
+function deleteInfoIntoDatabase(){
+	$db = (new Model());
+	//$db->deleteIntoStudentDB(2);
+	require('src/views/viewDelete.php');
+}
+
+function displayDatabase(){
+	$db = (new Model());
+	$db->displayStudentDB();
+	require('src/views/viewInfo.php');
 }
 
 function error404(){
