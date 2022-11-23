@@ -131,8 +131,25 @@ class Model {
         $query = "DROP TABLE IF EXISTS ".$nom;
         $this->pdo->exec($query);
     }
+
+    public function addIntoStudentsDB($student_id, $first_name, $last_name, $student_number){
+        $query = "INSERT INTO students (student_id, first_name, last_name, student_number) VALUES ('$student_id', '$first_name', '$last_name', '$student_number')";
+        $this->pdo->query($query);
+    }
+
+    public function deleteIntoStudentDB($student_id){
+        $query = "DELETE FROM students WHERE student_id = $student_id";
+        $this->pdo->query($query);
+    }
+
+    public function displayStudentDB(){
+        $query = "SELECT * FROM students";
+        foreach($this->pdo->query($query) as $row){
+            print "<br>";
+            print $row['student_id'].'-'.$row['first_name'].'-'.$row['last_name'].'-'.$row['student_number'].'<br/>';
+        }
+    }
+
 }
-
-
 
 ?>
