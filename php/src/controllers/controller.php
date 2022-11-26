@@ -36,6 +36,7 @@ function addInfoIntoDatabase(){
 	//$db->addIntoStudentsDB(2,"Alix","Baptiste",2); 
 	$db->addIntoLecturersDB(1,"Martin","Arnaud");
 	$db->addIntoRoomsDB(1,"A103");
+	$db->addIntoSubjectsDB(1,"Electronique");
 	require('src/views/viewAddInfo.php');
 }
 

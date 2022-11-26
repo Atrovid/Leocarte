@@ -159,6 +159,11 @@ class Model {
         $query = "INSERT INTO rooms(room_id, room_name) VALUES ('$room_id', '$room_name')";
         $this->pdo->query($query);
     }
+
+    public function addIntoSubjectsDB($subject_id, $subject_name){
+        $query = "INSERT INTO subjects(subject_id, subject_name) VALUES ('$subject_id', '$subject_name')";
+        $this->pdo->query($query);
+    }
 }
 
 ?>
