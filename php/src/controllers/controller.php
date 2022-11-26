@@ -33,10 +33,12 @@ function dropTable(){
 
 function addInfoIntoDatabase(){
 	$db = (new Model());
-	//$db->addIntoStudentsDB(2,"Alix","Baptiste",2); 
-	$db->addIntoLecturersDB(1,"Martin","Arnaud");
-	$db->addIntoRoomsDB(1,"A103");
-	$db->addIntoSubjectsDB(1,"Electronique");
+	$db->addIntoStudentsDB(2,"Alix","Baptiste",2); 
+	$db->addIntoLecturersDB(1,"Martin","Arnaud"); //lecturer_id = 1
+	$db->addIntoRoomsDB(103,"A103"); //room_id = 103
+	$db->addIntoSubjectsDB(1,"Electronique"); //subject_id = 1
+	$db->addIntoClassesDB(1,1,103,1,"8:15","10:30"); // class_id, lecturer_id, room_id, subject_id, start_hour, end_hour
+	
 	require('src/views/viewAddInfo.php');
 }
 

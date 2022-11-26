@@ -164,6 +164,12 @@ class Model {
         $query = "INSERT INTO subjects(subject_id, subject_name) VALUES ('$subject_id', '$subject_name')";
         $this->pdo->query($query);
     }
+
+    public function addIntoClassesDB($class_id, $lecturer_id, $room_id, $subject_id, $start_hour, $end_hour){
+        $query = "INSERT INTO classes (class_id, lecturer_id, room_id, subject_id, start_hour, end_hour) VALUES ('$class_id', '$lecturer_id', '$room_id', '$subject_id', '$start_hour', '$end_hour')";
+        $this->pdo->query($query);
+    }
+
 }
 
 ?>
