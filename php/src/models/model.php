@@ -170,6 +170,11 @@ class Model {
         $this->pdo->query($query);
     }
 
+    public function addIntoAttendancesDB($class_id, $student_id, $attending){
+        $query = "INSERT INTO attendances(class_id, student_id, attending) VALUES ('$class_id', '$student_id', '$attending')";
+        $this->pdo->query($query);
+    }
+
 }
 
 ?>
