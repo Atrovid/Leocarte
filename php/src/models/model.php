@@ -150,6 +150,12 @@ class Model {
         }
     }
 
+    public function addIntoLecturersDB($lecturer_id, $lecturer_first_name, $lecturer_last_name){
+        $query = "INSERT INTO lecturers(lecturer_id, lecturer_first_name, lecturer_last_name) VALUES ('$lecturer_id', '$lecturer_first_name', '$lecturer_last_name')";
+        $this->pdo->query($query);
+    }
+
+    
 }
 
 ?>
