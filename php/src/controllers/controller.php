@@ -34,8 +34,8 @@ function dropTable(){
 function addInfoIntoDatabase(){
 	$db = (new Model());
 	//$db->addIntoStudentsDB(2,"Alix","Baptiste",2); 
-	$db->addIntoLecturersDB(2,"Martin","Arnaud");
-	
+	$db->addIntoLecturersDB(1,"Martin","Arnaud");
+	$db->addIntoRoomsDB(1,"A103");
 	require('src/views/viewAddInfo.php');
 }
 
