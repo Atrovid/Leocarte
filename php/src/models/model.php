@@ -175,6 +175,29 @@ class Model {
         $this->pdo->query($query);
     }
 
+    public function checkStudentInClass($student_number, $room_name, $hour)
+    {
+        $query = "SELECT student_id 
+                  FROM attendances 
+                  WHERE (SELECT student_id 
+                        FROM students 
+                        WHERE '$student_number' = student_number 
+                        LIMIT 1)
+                        = 
+                        student_id 
+                  AND   (SELECT class_id 
+                        FROM class 
+                        WHERE room_id = (SELECT room_id 
+                                        FROM rooms 
+                                        WHERE '$room_name' = room_name)
+                        AND '$hour' BETWEEN (start_hour, end_hour)
+                        LIMIT 1)
+                ";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
 }
 
 ?>
