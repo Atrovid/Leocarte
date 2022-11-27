@@ -189,9 +189,9 @@ class Model {
                         FROM class 
                         WHERE room_id = (SELECT room_id 
                                         FROM rooms 
-                                        WHERE '$room_name' = room_name)
-                        AND '$hour' BETWEEN (start_hour, end_hour)
-                        LIMIT 1)
+                                        WHERE $room_name = room_name)
+                        /* AND '$hour' BETWEEN (start_hour, end_hour)
+                        LIMIT 1) */
                 ";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();

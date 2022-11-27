@@ -56,7 +56,7 @@ function displayDatabase(){
 
 function checkStudentInClass(){
 	$db = (new Model());
-	$db->checkStudentInClass(2,"A103","9:00");
+	echo( $db->checkStudentInClass(2,'A103','9:00') );
 	require('src/views/viewSearchStudentInClass.php');
 }
 
