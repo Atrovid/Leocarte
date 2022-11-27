@@ -54,6 +54,12 @@ function displayDatabase(){
 	require('src/views/viewInfo.php');
 }
 
+function checkStudentInClass(){
+	$db = (new Model());
+	$db->checkStudentInClass(2,"A103","9:00");
+	require('src/views/viewSearchStudentInClass.php');
+}
+
 function error404(){
 	require('src/views/viewError404.php');
 }
