@@ -23,10 +23,6 @@ body {
     --bs-table-border-color: transparent;
 }
 
-#invisible {
-    visibility: hidden;
-}
-
 button {
     padding: 2%;
 }

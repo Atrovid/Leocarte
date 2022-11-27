@@ -125,6 +125,7 @@ class Model {
         $query = "DROP TABLE ".$nom;
         $this->pdo->exec($query);
     }
+
 }
 
 
