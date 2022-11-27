@@ -185,13 +185,13 @@ class Model {
                         LIMIT 1)
                         = 
                         student_id 
-                  AND   (SELECT class_id 
-                        FROM class 
+                  AND  class_id = (SELECT class_id 
+                        FROM classes
                         WHERE room_id = (SELECT room_id 
                                         FROM rooms 
-                                        WHERE $room_name = room_name)
+                                        WHERE '$room_name' = room_name)
                         /* AND '$hour' BETWEEN (start_hour, end_hour)
-                        LIMIT 1) */
+                        LIMIT 1*/)
                 ";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
