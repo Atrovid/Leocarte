@@ -19,11 +19,17 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     }
     else if($_GET['action'] === 'display') {
         displayDatabase();
-    }
-    else{
+    } else if($_GET['action'] == 'check' ) {
+        checkStudentInClass();
+    } else if($_GET['action'] == 'confirm' ) {
+        setStudentPresence($_GET['number'], $_GET['room']);
+    } else if ($_GET['action'] === 'attendance') {
+        attendance();
+    }else{
         echo "L'action n'est pas connue";
         die;
 	}
+
 } else {
 	error404(); //Eventually redirect to the home/login page
 }
