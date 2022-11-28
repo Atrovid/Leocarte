@@ -70,7 +70,9 @@ function error404(){
 	require('src/views/viewError404.php');
 }
 
-
+function attendance() {
+	require('src/views/viewAttendance.php');
+}
 
 
 
