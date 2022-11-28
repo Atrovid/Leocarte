@@ -198,6 +198,17 @@ class Model {
         return $stmt->fetch();
     }
 
+    public function getAttendanceList($room_name /*, time */){
+        $query = "
+        SELECT first_name, last_name, attending 
+        FROM students 
+        LEFT JOIN attendances AS atte ON students.student_id = atte.student_id
+        WHERE
+        students.student_id IN (SELECT student_id FROM attendances WHERE class_id IN (SELECT class_id FROM classes WHERE room_id = (SELECT room_id FROM rooms WHERE room_name = '$room_name' LIMIT 1)))
+        ;";
+        return $this->pdo->query($query);
+    }
+
     public function getClass($room_name/*, $time */){
         $query = "
         SELECT class_id 
@@ -206,9 +217,7 @@ class Model {
         FROM rooms 
         WHERE '$room_name' = room_name)
         ";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        return $stmt->fetch();
+        return $this->pdo->query($query);
     }
 
     public function setAttendance($student_number, $room_name /*, time */ , $attending){

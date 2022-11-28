@@ -42,21 +42,25 @@
                             <tr>
                                 <th>Firstname</th>
                                 <th>Lastname</th>
+                                <th>Attending</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>John</td>
-                                <td>Doe</td>
-                            </tr>
-                            <tr>
-                                <td>Mary</td>
-                                <td>Moe</td>
-                            </tr>
-                            <tr>
-                                <td>July</td>
-                                <td>Dooley</td>
-                            </tr>
+                            <?php
+                                foreach ($results as $result){
+                                    if ($result['attending']){
+                                        $attending = "Yes";
+                                    } else {
+                                        $attending = "No";
+                                    }
+                                    $row = "<tr>
+                                    <td>".$result['first_name']."</td>
+                                    <td>".$result['last_name']."</td>
+                                    <td>".$attending."</td>
+                                    </tr>";
+                                    echo $row;
+                                } 
+                            ?>
                         </tbody>
                     </table>
                 </div>

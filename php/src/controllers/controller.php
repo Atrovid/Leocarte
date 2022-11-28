@@ -71,6 +71,8 @@ function error404(){
 }
 
 function attendance() {
+	$db = new Model();
+	$results = $db->getAttendanceList("A103");
 	require('src/views/viewAttendance.php');
 }
 
