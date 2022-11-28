@@ -38,7 +38,7 @@ function addInfoIntoDatabase(){
 	$db->addRooms(103,"A103"); //room_id = 103
 	$db->addSubjects(1,"Electronique"); //subject_id = 1
 	$db->addClasses(1,1,103,1,"8:15","10:30"); // class_id, lecturer_id, room_id, subject_id, start_hour, end_hour
-	$db->addAttendances(1,2,TRUE); //class_id, student_id
+	$db->addAttendances(1,2,FALSE); //class_id, student_id
 	require('src/views/viewAddInfo.php');
 }
 
@@ -56,8 +56,14 @@ function displayDatabase(){
 
 function checkStudentInClass(){
 	$db = (new Model());
-	$db->checkStudentInClass(2,"A103","9:00");
+	$db->checkStudentInClass(2,"A103","9:00")[0];
 	require('src/views/viewSearchStudentInClass.php');
+}
+
+function setStudentPresence($student_number, $room_name){
+	$db = new Model();
+	$db->setAttendance($student_number, $room_name,'true');
+	require('src/views/viewError404.php');
 }
 
 function error404(){

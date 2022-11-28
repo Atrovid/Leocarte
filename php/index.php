@@ -21,8 +21,9 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         displayDatabase();
     } else if($_GET['action'] == 'check' ) {
         checkStudentInClass();
-    }
-    else{
+    } else if($_GET['action'] == 'confirm' ) {
+        setStudentPresence($_GET['number'], $_GET['room']);
+    } else{
         echo "L'action n'est pas connue";
         die;
 	}
