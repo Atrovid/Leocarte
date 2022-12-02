@@ -24,6 +24,7 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         echo "L'action n'est pas connue";
         die;
 	}
+
 } else {
 	error404(); //Eventually redirect to the home/login page
 }
