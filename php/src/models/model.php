@@ -132,7 +132,7 @@ class Model {
         $this->pdo->exec($query);
     }
 
-    public function addStudents($student_id, $first_name, $last_name, $student_number){
+    public function addStudent($student_id, $first_name, $last_name, $student_number){
         $query = "INSERT INTO students (student_id, first_name, last_name, student_number) VALUES ('$student_id', '$first_name', '$last_name', '$student_number')";
         $this->pdo->query($query);
     }
@@ -142,7 +142,7 @@ class Model {
         $this->pdo->query($query);
     }
 
-    public function displayStudentDB(){
+    public function displayStudent(){
         $query = "SELECT * FROM students";
         foreach($this->pdo->query($query) as $row){
             print "<br>";
@@ -150,27 +150,27 @@ class Model {
         }
     }
 
-    public function addLecturers($lecturer_id, $lecturer_first_name, $lecturer_last_name){
+    public function addLecturer($lecturer_id, $lecturer_first_name, $lecturer_last_name){
         $query = "INSERT INTO lecturers(lecturer_id, lecturer_first_name, lecturer_last_name) VALUES ('$lecturer_id', '$lecturer_first_name', '$lecturer_last_name')";
         $this->pdo->query($query);
     }
 
-    public function addRooms($room_id, $room_name){
+    public function addRoom($room_id, $room_name){
         $query = "INSERT INTO rooms(room_id, room_name) VALUES ('$room_id', '$room_name')";
         $this->pdo->query($query);
     }
 
-    public function addSubjects($subject_id, $subject_name){
+    public function addSubject($subject_id, $subject_name){
         $query = "INSERT INTO subjects(subject_id, subject_name) VALUES ('$subject_id', '$subject_name')";
         $this->pdo->query($query);
     }
 
-    public function addClasses($class_id, $lecturer_id, $room_id, $subject_id, $start_hour, $end_hour){
+    public function addClass($class_id, $lecturer_id, $room_id, $subject_id, $start_hour, $end_hour){
         $query = "INSERT INTO classes (class_id, lecturer_id, room_id, subject_id, start_hour, end_hour) VALUES ('$class_id', '$lecturer_id', '$room_id', '$subject_id', '$start_hour', '$end_hour')";
         $this->pdo->query($query);
     }
 
-    public function addAttendances($class_id, $student_id){
+    public function addAttendance($class_id, $student_id){
         $query = "INSERT INTO attendances(class_id, student_id, attending) VALUES ('$class_id', '$student_id', 'false')";
         $this->pdo->query($query);
     }
