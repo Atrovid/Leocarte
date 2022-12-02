@@ -170,9 +170,71 @@ class Model {
         $this->pdo->query($query);
     }
 
-    public function addAttendances($class_id, $student_id, $attending){
-        $query = "INSERT INTO attendances(class_id, student_id, attending) VALUES ('$class_id', '$student_id', '$attending')";
+    public function addAttendances($class_id, $student_id){
+        $query = "INSERT INTO attendances(class_id, student_id, attending) VALUES ('$class_id', '$student_id', 'false')";
         $this->pdo->query($query);
+    }
+
+    public function checkStudentInClass($student_number, $room_name, $hour)
+    {
+        $query = "SELECT student_id 
+                  FROM attendances 
+                  WHERE (SELECT student_id 
+                        FROM students 
+                        WHERE '$student_number' = student_number 
+                        LIMIT 1)
+                        = 
+                        student_id 
+                  AND  class_id = (SELECT class_id 
+                        FROM classes
+                        WHERE room_id = (SELECT room_id 
+                                        FROM rooms 
+                                        WHERE '$room_name' = room_name)
+                        /* AND '$hour' BETWEEN (start_hour, end_hour)
+                        LIMIT 1*/)
+                ";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+
+    public function getAttendanceList($room_name /*, time */){
+        $query = "
+        SELECT first_name, last_name, attending 
+        FROM students 
+        LEFT JOIN attendances AS atte ON students.student_id = atte.student_id
+        WHERE
+        students.student_id IN (SELECT student_id FROM attendances WHERE class_id IN (SELECT class_id FROM classes WHERE room_id = (SELECT room_id FROM rooms WHERE room_name = '$room_name' LIMIT 1)))
+        ;";
+        return $this->pdo->query($query);
+    }
+
+    public function getClass($room_name/*, $time */){
+        $query = "
+        SELECT class_id 
+        FROM classes
+        WHERE room_id = (SELECT room_id 
+        FROM rooms 
+        WHERE '$room_name' = room_name)
+        ";
+        return $this->pdo->query($query);
+    }
+
+    public function setAttendance($student_number, $room_name /*, time */ , $attending){
+        $stmt =  "
+        UPDATE attendances
+        SET attending = TRUE
+        WHERE class_id = (SELECT class_id 
+        FROM classes
+        WHERE room_id = (SELECT room_id 
+        FROM rooms 
+        WHERE '$room_name' = room_name) LIMIT 1)
+        AND   student_id = (SELECT student_id 
+        FROM students 
+        WHERE '$student_number' = student_number 
+        LIMIT 1);
+        ";
+        $this->pdo->prepare($stmt)->execute();
     }
 
 }
