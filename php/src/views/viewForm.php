@@ -24,21 +24,21 @@
     <form id="Formulaire" class="was-validated" method ="post" action="">
         <div class="mb-3">
             <label for="matiere_cours" class="form-label">Matière enseignée : </label>
-            <input type="text" name="subject" class="form-control" id="matiere_cours" placeholder="Enter the subject of the course" required>
+            <input type="text" name="id_subject" class="form-control" id="matiere_cours" placeholder="Enter the id_subject of the course" required>
             <div class="valid-feedback">Valid</div>
             <div class="invalid-feedback">Please fill out this field</div>
         </div>
         <div class="row">
             <div class="col">
                 <label for="horaire_debut" class="form-label">Horaire de début : </label>
-                <input type="time" name="begin_hour" class="form-control" id="horaire_debut" placeholder="Enter the begin of the course"
+                <input type="time" name="start_hour" class="form-control" id="horaire_debut" placeholder="Enter the begin of the course"
                     >
                 <div class="valid-feedback">Valid</div>
                 <div class="invalid-feedback">Please fill out this field</div>
             </div>
             <div class="col">
                 <label for="horaire_fin" class="form-label">Horaire de fin : </label>
-                <input type="time" name="end_course" class="form-control" id="horaire_fin" placeholder="Enter the end of the course"
+                <input type="time" name="end_hour" class="form-control" id="horaire_fin" placeholder="Enter the end of the course"
                     >
                 <div class=" valid-feedback">Valid</div>
                 <div class="invalid-feedback">Please fill out this field</div>

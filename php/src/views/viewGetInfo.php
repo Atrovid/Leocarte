@@ -4,21 +4,21 @@
 ini_set('display_errors', 1);
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $subject = $_POST['subject']; 
-        $begin_hour = $_POST['begin_hour'];
-        $end_course = $_POST['end_course'];
+        $id_subject = $_POST['id_subject']; 
+        $start_hour = $_POST['start_hour'];
+        $end_hour = $_POST['end_hour'];
     
-        if (!isset($subject)){
+        if (!isset($id_subject)){
             echo "Veuillez entrer une matière";
         }
-        if (!isset($begin_hour)){
+        if (!isset($start_hour)){
             echo "Veuillez entrer une heure de début";
         }
-        if(!isset($end_course)){
+        if(!isset($end_hour)){
             echo "Veuillez entrer une heure de fin";
         }
 
-        print "La matière est : " . $subject . " l'heure de début est : " . $begin_hour . " l'heure de fin est : " . $end_course;
+        print "La matière est : " . $id_subject . " l'heure de début est : " . $start_hour . " l'heure de fin est : " . $end_hour;
         
     }
 

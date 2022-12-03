@@ -76,17 +76,17 @@ function attendance() {
 	require('src/views/viewAttendance.php');
 }
 
-function getInfoFromFormular(){
+function getInfoFromForm(){
 	$db= new Model();
 	if($_SERVER["REQUEST_METHOD"]=="GET"){
 		require('src/views/viewForm.php');
 		
 	}
 	if($_SERVER["REQUEST_METHOD"]=="POST"){
-		$subject = $_POST['subject']; 
-        $begin_hour = $_POST['begin_hour'];
-        $end_course = $_POST['end_course'];
-		$db->addClass(3,1,103,$subject,$begin_hour,$end_course);
+		$id_subject = $_POST['id_subject']; 
+        $start_hour = $_POST['start_hour'];
+        $end_hour = $_POST['end_hour'];
+		$db->addClass(3,1,103,$id_subject,$start_hour,$end_hour);
 
 	}
 }

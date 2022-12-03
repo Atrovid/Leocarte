@@ -29,8 +29,8 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     else if ($_GET['action'] === 'attendance') {
         attendance();
     }
-    else if($_GET['action'] == 'formular' ) {
-        getInfoFromFormular(); 
+    else if($_GET['action'] == 'form' ) {
+        getInfoFromForm(); 
     } 
     else{
         echo "L'action n'est pas connue";
