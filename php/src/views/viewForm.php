@@ -21,7 +21,7 @@
 </header>
 
 <body class="p-3 m-0 border-0 bd-example">
-    <form id="Formulaire" class="was-validated" method ="post" action="viewFormular.php">
+    <form id="Formulaire" class="was-validated" method ="post" action="viewGetInfo.php">
         <div class="mb-3">
             <label for="matiere_cours" class="form-label">Matière enseignée : </label>
             <input type="text" name="subject" class="form-control" id="matiere_cours" placeholder="Enter the subject of the course" required>

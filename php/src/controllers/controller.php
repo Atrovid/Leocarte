@@ -79,7 +79,8 @@ function attendance() {
 function getInfoFromFormular(){
 	$db= new Model();
 	if($_SERVER["REQUEST_METHOD"]=="GET"){
-		require('src/views/viewFormular.php');
+		require('src/views/viewForm.php');
+		
 	}
 	if($_SERVER["REQUEST_METHOD"]=="POST"){
 		$subject = $_POST['subject']; 
