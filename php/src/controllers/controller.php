@@ -86,7 +86,8 @@ function getInfoFromFormular(){
 		$subject = $_POST['subject']; 
         $begin_hour = $_POST['begin_hour'];
         $end_course = $_POST['end_course'];
-		$db->addClassBySubjectAndHour($subject,$begin_hour,$end_course);
+		$db->addClass(3,1,103,$subject,$begin_hour,$end_course);
+
 	}
 }
 
