@@ -92,8 +92,6 @@ function getInfoFromForm(){
 }
 
 function requestCurlGetTagLogID($csn){
-
-
 	$body = "{\"numeroId\":\"keyboard-secondary-id\",\"csn\":\"$csn\"}";
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, "https://nfc-tag.ensicaen.fr/csn-ws");
@@ -104,15 +102,19 @@ function requestCurlGetTagLogID($csn){
 	$resultJson = curl_exec($ch);
 	//echo $resultJson; //retourne les info dans un objet de type json
 	$resultPHP=json_decode($resultJson);
-	print $resultPHP->{'taglogId'};
-	return $resultPHP;
+	//print "Le taglogId est : \n";
+	//print $resultPHP->{'taglogId'};
+	return $resultPHP->{'taglogId'};
 }
 
-
-
-
-
-
+function requestCurlGetStudentID($tagLogId){
+	echo $tagLogId;
+	$ch = curl_init();
+	echo "Le numéro de l'étudiant est : " ;
+	curl_setopt($ch, CURLOPT_URL, "https://nfc-tag.ensicaen.fr/nfc-ws/display?numeroId=keyboard-secondary-id&id=$tagLogId");
+	$result = curl_exec($ch);
+	return $result;
+}
 
 
 ?>

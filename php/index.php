@@ -33,8 +33,9 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         getInfoFromForm(); 
     } 
     else if($_GET['action'] == 'curl' ) {
-        //$csn = ??? //Mettre votre CSN
-        requestCurlGetTagLogID($csn); 
+        //$csn = ???; //Mettre votre CSN
+        $tagLogID = requestCurlGetTagLogID($csn); 
+        $studentID = requestCurlGetStudentID($tagLogID);
     } 
     else{
         echo "L'action n'est pas connue";
