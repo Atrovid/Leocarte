@@ -91,6 +91,23 @@ function getInfoFromForm(){
 	}
 }
 
+function requestCurlGetTagLogID($csn){
+
+
+	$body = "{\"numeroId\":\"keyboard-secondary-id\",\"csn\":\"$csn\"}";
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, "https://nfc-tag.ensicaen.fr/csn-ws");
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+	$resultJson = curl_exec($ch);
+	//echo $resultJson; //retourne les info dans un objet de type json
+	$resultPHP=json_decode($resultJson);
+	print $resultPHP->{'taglogId'};
+	return $resultPHP;
+}
+
 
 
 

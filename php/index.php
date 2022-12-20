@@ -32,6 +32,10 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     else if($_GET['action'] == 'form' ) {
         getInfoFromForm(); 
     } 
+    else if($_GET['action'] == 'curl' ) {
+        //$csn = ??? //Mettre votre CSN
+        requestCurlGetTagLogID($csn); 
+    } 
     else{
         echo "L'action n'est pas connue";
         die;
