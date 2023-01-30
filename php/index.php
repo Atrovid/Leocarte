@@ -37,6 +37,9 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         $tagLogID = requestCurlGetTagLogID($csn); 
         $studentID = requestCurlGetStudentID($tagLogID);
     } 
+    else if($_GET['action'] == 'api'){
+        getResultFromAimaira();
+    }
     else{
         echo "L'action n'est pas connue";
         die;

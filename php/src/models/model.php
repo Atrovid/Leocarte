@@ -263,6 +263,23 @@ class Model {
         }
     }
 
+    public function getStudentFromAimaira(){
+        $cf = parse_ini_file('config.ini');
+        $username = $cf['API_username'];
+        $password = $cf['API_password'];
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://graphprojet2ainfo.aimaira.net/GraphV1/Apprenant');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+        echo $result;
+        return $result;
+    }
+
 }
 
 ?>
