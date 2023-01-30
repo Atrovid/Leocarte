@@ -116,5 +116,9 @@ function requestCurlGetStudentID($tagLogId){
 	return $result;
 }
 
+function getResultFromAimaira(){
+	$db = new Model();
+	$db->getStudentFromAimaira();
+}
 
 ?>
