@@ -119,7 +119,11 @@ function requestCurlGetStudentID($tagLogId){
 function getResultFromAimaira(){
 	$db = new Model();
 	$resultAPI = $db->getStudentFromAimaira();
-	$db->FilterCode($resultAPI);
+	$arrayOfCode = $db->FilterCode($resultAPI);
+	//$code1 = $db->getACode($arrayOfCode, 'A00081');
+	//echo $code1;
+	$code2 = $db->getACode($arrayOfCode, 'A0008999');
+	echo $code2;
 }
 
 ?>

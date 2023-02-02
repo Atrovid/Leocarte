@@ -287,6 +287,17 @@ class Model {
             $codes[] = $person['Code'];
         }
         print_r($codes);
+        return $codes;
+    }
+
+    public function getACode($arrayOfCode, $code){
+        $key = array_search($code, $arrayOfCode);
+        if ($key !== false){
+            echo "Code found at index " . $key;
+        } else {
+            echo "Code not found";
+        }
+        return $key;
     }
 
 }
