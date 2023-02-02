@@ -280,6 +280,15 @@ class Model {
         return $result;
     }
 
+    public function FilterCode($reponseJSON){
+        $array = json_decode($reponseJSON, true);
+        $codes = array();
+        foreach($array['value'] as $person){
+            $codes[] = $person['Code'];
+        }
+        print_r($codes);
+    }
+
 }
 
 ?>

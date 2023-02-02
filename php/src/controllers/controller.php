@@ -118,7 +118,8 @@ function requestCurlGetStudentID($tagLogId){
 
 function getResultFromAimaira(){
 	$db = new Model();
-	$db->getStudentFromAimaira();
+	$resultAPI = $db->getStudentFromAimaira();
+	$db->FilterCode($resultAPI);
 }
 
 ?>
