@@ -1,11 +1,11 @@
 <?php
 
 
-require_once('src/controllers/controller.php');
+require_once('src/controllers/controller_api.php');
 
 
 if (isset($_GET['action']) && $_GET['action'] !== '') {
-	if ($_GET['action'] === 'create') {
+	/*if ($_GET['action'] === 'create') {
         createDatabase();
     } 
     else if ($_GET['action'] === 'destroy') {
@@ -29,17 +29,18 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     else if ($_GET['action'] === 'attendance') {
         attendance();
     }
-    else if($_GET['action'] == 'form' ) {
-        getInfoFromForm(); 
+    else */
+    if($_GET['action'] == 'form' ) {
+        getTeacherInformationFromForm(); 
     } 
-    else if($_GET['action'] == 'curl' ) {
+    /*else if($_GET['action'] == 'curl' ) {
         //$csn = ???; //Mettre votre CSN
         $tagLogID = requestCurlGetTagLogID($csn); 
         $studentID = requestCurlGetStudentID($tagLogID);
     } 
     else if($_GET['action'] == 'api'){
         getResultFromAimaira();
-    }
+    }*/
     else{
         echo "L'action n'est pas connue";
         die;
