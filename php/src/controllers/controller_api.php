@@ -16,6 +16,7 @@
 
     function display() {
         $model = new ModelApi();
+        require('src/views/viewAttendanceAPI.php');
         $name = ($_GET["name"]);
         $firstname = ($_GET["firstname"]);
         
@@ -27,21 +28,25 @@
             $result = $model->searchSeancesFromCoursAndTeacher($value, $name, $firstname);
             $id = $model->filterSeancesNow($result);
             if ($id != 0) {
-                displayListStudent($id, $value);
+                $nameTopic = $model->topicNow($value);
+                displayListStudent($id, $value, $nameTopic);
                 break;
             }
         }
     }
 
-    function displayListStudent($idSeance, $coursId) {
+    function displayListStudent($idSeance, $coursId, $nameTopic) {
         $model = new ModelApi();
         $responseJSON = $model->searchRoomAndPlanificationIdFromSeances($idSeance);
         $roomName = $model->filterRoomName($responseJSON);
-        echo $roomName;
         $responseJSON = $model->takeStudentTeacherAndRoomFromPlanificationID($model->filterPlanificationId($responseJSON));
-        $students = $model->getStudents($responseJSON);
-        foreach ($students as $key => $value) {
-            echo "<p>$value</p>";
-        }
+        $model->displayStudents($responseJSON);
+        echo "<div class=\"col-sm-4 p-3 bg-primary text-white\">";
+        echo "<h2>Information</h2><ul>";
+        echo "<li>Room : ".$roomName."</li>";
+        echo "<li>Topic : ".$nameTopic."</li>";
+        echo "</ul></div>";
+        echo "</div>";
+        echo "</div>";
     }
 ?>

@@ -88,7 +88,7 @@
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
-                if (($total_minutes <= 60) && ($total_minutes >= -15)) {
+                if (($total_minutes <= 160) && ($total_minutes >= -15)) {
                     $id = $seance['Id'];
                 } else {
                     $id = $id;
@@ -97,6 +97,22 @@
             return $id;
         }
 
+        function topicNow($coursId) {
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Cours/".$coursId."/?\$select=Nom");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            $array = json_decode($responseJSON, true);
+            return $array['Nom'];
+        }
+        
         function searchRoomAndPlanificationIdFromSeances($idSeance) {
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
@@ -130,7 +146,7 @@
             $password = $cf['API_password'];
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/".$planificationId."/PlanificationsRessource?\$select=Nom,%20TypeRessourceId");
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/".$planificationId."/PlanificationsRessource?\$select=Nom,%20TypeRessourceId,%20Presence");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -155,17 +171,28 @@
             return ($array['Nom']=="Apprenant");
         }
 
-        function getStudents($responseJSON){
+        function displayStudents($responseJSON){
             $array = json_decode($responseJSON, true);
             $students = array();
+            echo "<div class=\"container-fluid mt-3\">";
+            echo "<div class=\"row\">";
+            echo "<div class=\"col-sm-8 p-3\">";
+            echo "<table class=\"table table-striped\">";
+            echo "<thead>";
+            echo "<tr><th>Student</th><th>Attendance</th></tr></thead><tbody>";
             foreach($array['value'] as $ressource) {
                 if ($this->checkStudent($ressource['TypeRessourceId']) == true) {
-                    $students [] = $ressource['Nom'];
+                    echo "<tr>";
+                    echo "<th>".$ressource['Nom']."</th>";
+                    if ($ressource['Presence'] == false) {
+                        echo "<th>No</th>";
+                    } else {
+                        echo "<th>Yes</th>";
+                    }
+                    echo "</tr>";
                 }
             }
-            return $students;
-        }
-
-        
+            echo "</tbody></table></div>";
+        }        
     }
 ?>
