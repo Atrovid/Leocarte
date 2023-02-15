@@ -10,8 +10,6 @@ header {
     margin: 1%;
 }
 
-
-
 body {
     --bs-body-line-height: 1.4;
     --bs-body-bg: var(--bs-gray-100);
@@ -25,4 +23,8 @@ body {
 
 button {
     padding: 2%;
+}
+
+p {
+    color: purple;
 }

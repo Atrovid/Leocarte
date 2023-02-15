@@ -33,6 +33,10 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     if($_GET['action'] == 'form' ) {
         getTeacherInformationFromForm(); 
     } 
+    else if($_GET['action'] == 'attendance') {
+        display();
+    }
+    
     /*else if($_GET['action'] == 'curl' ) {
         //$csn = ???; //Mettre votre CSN
         $tagLogID = requestCurlGetTagLogID($csn); 
