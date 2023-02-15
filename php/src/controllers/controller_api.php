@@ -36,9 +36,9 @@
     function displayListStudent($idSeance, $coursId) {
         $model = new ModelApi();
         $responseJSON = $model->searchRoomAndPlanificationIdFromSeances($idSeance);
-        echo $responseJSON;
+        $roomName = $model->filterRoomName($responseJSON);
+        echo $roomName;
         $responseJSON = $model->takeStudentTeacherAndRoomFromPlanificationID($model->filterPlanificationId($responseJSON));
-        echo $responseJSON;
         $students = $model->getStudents($responseJSON);
         foreach ($students as $key => $value) {
             echo "<p>$value</p>";

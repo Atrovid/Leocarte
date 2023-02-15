@@ -103,7 +103,7 @@
             $password = $cf['API_password'];
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Seance/" . $idSeance ."?\$select=PlanificationId");
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Seance/" . $idSeance ."?\$select=PlanificationId,%20NomSalle");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -116,6 +116,12 @@
             $array = json_decode($responseJSON, true);
             $planificationId = $array['PlanificationId'];
             return $planificationId;
+        }
+
+        function filterRoomName($responseJSON) {
+            $array = json_decode($responseJSON, true);
+            $roomName = $array['NomSalle'];
+            return $roomName;
         }
 
         function takeStudentTeacherAndRoomFromPlanificationID($planificationId) {

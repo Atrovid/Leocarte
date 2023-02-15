@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="fr">
 <head>
   <title>Class attendance</title>
   <meta charset="utf-8">
