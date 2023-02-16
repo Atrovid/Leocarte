@@ -35,6 +35,9 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     } 
     else if($_GET['action'] == 'attendance') {
         display();
+    } else if ($_GET['action'] == 'export_csv') {
+        echo "coucou";
+        convertInCSV();
     }
     
     /*else if($_GET['action'] == 'curl' ) {

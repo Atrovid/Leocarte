@@ -88,7 +88,7 @@
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
-                if (($total_minutes <= 160) && ($total_minutes >= -15)) {
+                if (($total_minutes <= 60) && ($total_minutes >= -15)) {
                     $id = $seance['Id'];
                 } else {
                     $id = $id;
@@ -173,7 +173,6 @@
 
         function displayStudents($responseJSON){
             $array = json_decode($responseJSON, true);
-            $students = array();
             echo "<div class=\"container-fluid mt-3\">";
             echo "<div class=\"row\">";
             echo "<div class=\"col-sm-8 p-3\">";

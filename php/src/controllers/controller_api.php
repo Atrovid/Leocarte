@@ -45,8 +45,30 @@
         echo "<h2>Information</h2><ul>";
         echo "<li>Room : ".$roomName."</li>";
         echo "<li>Topic : ".$nameTopic."</li>";
-        echo "</ul></div>";
+        echo "</ul>";
+        echo "<form method=\"post\" >";
+	    echo "<input type=\"submit\" class=\"valider\" name=\"inCSV\" value=\"Export csv\" /></form>";
+        if (array_key_exists('inCSV', $_POST)) {
+            convertInCSV($responseJSON, $nameTopic);
+        }
+        echo "</div></div>";
         echo "</div>";
-        echo "</div>";
+        
+    }
+
+    function convertInCSV($responseJSON, $nameTopic) {
+        $array = json_decode($responseJSON, true);
+        $dateToday = new DateTime("now");
+        $nameFile = $nameTopic."_".$dateToday->format('Y_m_d');
+        foreach ($array['value'] as $student) {
+            $fp = fopen($nameFile, 'a');
+            if ($student['Presence'] == false) {
+                $data = array($student['Nom'], "No");
+            } else {
+                $date = array($student['Nom'], "Yes");
+            }
+            fputcsv($fp, $data, ',');
+            fclose($fp);
+        }
     }
 ?>
