@@ -88,7 +88,7 @@
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
-                if (($total_minutes <= 60) && ($total_minutes >= -15)) {
+                if (($total_minutes <= 120) && ($total_minutes >= -15)) {
                     $id = $seance['Id'];
                 } else {
                     $id = $id;
@@ -173,25 +173,29 @@
 
         function displayStudents($responseJSON){
             $array = json_decode($responseJSON, true);
-            echo "<div class=\"container-fluid mt-3\">";
-            echo "<div class=\"row\">";
-            echo "<div class=\"col-sm-8 p-3\">";
-            echo "<table class=\"table table-striped\">";
-            echo "<thead>";
-            echo "<tr><th>Student</th><th>Attendance</th></tr></thead><tbody>";
+            echo "<script>";
+            echo "div = document.getElementById(\"students\");";
+            echo "tbody = document.createElement(\"tbody\");";
+            echo "div.appendChild(tbody);";
             foreach($array['value'] as $ressource) {
                 if ($this->checkStudent($ressource['TypeRessourceId']) == true) {
-                    echo "<tr>";
-                    echo "<th>".$ressource['Nom']."</th>";
+                    echo "tr = document.createElement(\"tr\");";
+                    echo "tbody.appendChild(tr);";
+                    echo "th = document.createElement(\"th\");";
+                    echo "tr.appendChild(th);";
+                    echo "text = document.createTextNode(\"".$ressource['Nom']."\");";
+                    echo "th.appendChild(text);";
+                    echo "thP = document.createElement(\"th\");";
+                    echo "tr.appendChild(thP);";
                     if ($ressource['Presence'] == false) {
-                        echo "<th>No</th>";
+                        echo "text = document.createTextNode(\"No\");";
                     } else {
-                        echo "<th>Yes</th>";
+                        echo "text = document.createTextNode(\"Yes\");";
                     }
-                    echo "</tr>";
+                    echo "thP.appendChild(text);";
                 }
             }
-            echo "</tbody></table></div>";
+            echo "</script>";
         }        
     }
 ?>

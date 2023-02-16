@@ -41,19 +41,24 @@
         $roomName = $model->filterRoomName($responseJSON);
         $responseJSON = $model->takeStudentTeacherAndRoomFromPlanificationID($model->filterPlanificationId($responseJSON));
         $model->displayStudents($responseJSON);
-        echo "<div class=\"col-sm-4 p-3 bg-primary text-white\">";
-        echo "<h2>Information</h2><ul>";
-        echo "<li>Room : ".$roomName."</li>";
-        echo "<li>Topic : ".$nameTopic."</li>";
-        echo "</ul>";
-        echo "<form method=\"post\" >";
-	    echo "<input type=\"submit\" class=\"valider\" name=\"inCSV\" value=\"Export csv\" /></form>";
+        echo "<script>";
+        echo "div = document.getElementById(\"information\");";
+        echo "ul = document.createElement(\"ul\");";
+        echo "div.appendChild(ul);";
+        echo "li = document.createElement(\"li\");";
+        echo "ul.appendChild(li);";
+        echo "text = document.createTextNode(\"Room  :".$roomName."\");";
+        echo "li.appendChild(text);";
+        echo "li = document.createElement(\"li\");";
+        echo "ul.appendChild(li);";
+        echo "text = document.createTextNode(\"Topic  :".$nameTopic."\");";
+        echo "li.appendChild(text);";
+        echo "</script>";
+
+        
         if (array_key_exists('inCSV', $_POST)) {
             convertInCSV($responseJSON, $nameTopic);
         }
-        echo "</div></div>";
-        echo "</div>";
-        
     }
 
     function convertInCSV($responseJSON, $nameTopic) {
