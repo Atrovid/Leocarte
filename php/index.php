@@ -1,6 +1,7 @@
 <?php
 
 
+require_once('src/controllers/controller.php');
 require_once('src/controllers/controller_api.php');
 
 
@@ -40,12 +41,17 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         convertInCSV();
     }
     
-    /*else if($_GET['action'] == 'curl' ) {
-        //$csn = ???; //Mettre votre CSN
-        $tagLogID = requestCurlGetTagLogID($csn); 
-        $studentID = requestCurlGetStudentID($tagLogID);
-    } 
-    else if($_GET['action'] == 'api'){
+    else if($_GET['action'] == 'curl' ) {
+        $csnDavid = "041818AA7E6780";
+        $tagLogID = requestCurlGetTagLogID($csnDavid); 
+        $studentID = requestCurlGetStudentID($tagLogID);        
+        $codeStudent = substr($studentID, -6);
+        echo "The code of student is : ".$codeStudent;
+        $salle="C-301";
+    }
+     
+    
+    /*else if($_GET['action'] == 'api'){
         getResultFromAimaira();
     }*/
     else{

@@ -100,7 +100,7 @@ function requestCurlGetTagLogID($csn){
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 	$resultJson = curl_exec($ch);
-	//echo $resultJson; //retourne les info dans un objet de type json
+	echo $resultJson; //retourne les info dans un objet de type json
 	$resultPHP=json_decode($resultJson);
 	//print "Le taglogId est : \n";
 	//print $resultPHP->{'taglogId'};
@@ -108,11 +108,7 @@ function requestCurlGetTagLogID($csn){
 }
 
 function requestCurlGetStudentID($tagLogId){
-	echo $tagLogId;
-	$ch = curl_init();
-	echo "Le numéro de l'étudiant est : " ;
-	curl_setopt($ch, CURLOPT_URL, "https://nfc-tag.ensicaen.fr/nfc-ws/display?numeroId=keyboard-secondary-id&id=$tagLogId");
-	$result = curl_exec($ch);
+	$result = file_get_contents("https://nfc-tag.ensicaen.fr/nfc-ws/display?numeroId=keyboard-secondary-id&id=".$tagLogId);
 	return $result;
 }
 

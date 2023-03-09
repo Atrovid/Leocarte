@@ -88,7 +88,7 @@
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
-                if (($total_minutes <= 120) && ($total_minutes >= -15)) {
+                if (($total_minutes <= 60) && ($total_minutes >= -30)) {
                     $id = $seance['Id'];
                 } else {
                     $id = $id;
