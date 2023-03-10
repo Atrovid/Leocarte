@@ -196,6 +196,142 @@
                 }
             }
             echo "</script>";
-        }        
+        }    
+        
+        function tratIDRoomFromNameOfRoom($responseJSON, $codeStudent, $nameRoomSearch){
+            $array= json_decode($responseJSON, true);
+            foreach ($array['value'] as $room){
+                $nameRoom = $room['Nom'];
+                if (strcmp($nameRoom, $nameRoomSearch) == 0){
+                    return $room['Id'];
+                }
+            }
+            return 0;
+        }
+        
+        function getIDRoomFromNameOfRoom($codeStudent, $nameRoomSearch){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/?\$filter=TypeRessourceId%20eq%20334210&\$select=Id,%20Nom");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            
+            $array= json_decode($responseJSON, true);
+            foreach ($array['value'] as $room){
+                $nameRoom = $room['Nom'];
+                if (strcmp($nameRoom, $nameRoomSearch) == 0){
+                    return $room['Id'];
+                }
+            }
+            return 0;
+        }
+
+        function getPlanificationsForTheRoom($IdRoom){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/".$IdRoom."/PlanificationRessources?\$select=PlanificationId,PlanificationDebut,PlanificationFin");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            return $responseJSON;
+        }
+
+        function filterCurrentPlanification($planificationJSON){
+            $array = json_decode($planificationJSON, true);
+            $id = 0;
+            $dateNow = new DateTime("now");
+
+            foreach ($array['value'] as $planification) {
+                $dateStartSeance = new DateTime($planification['PlanificationDebut']);
+                $diff = $dateNow->diff($dateStartSeance);
+                $total_minutes = ($diff->days * 24 * 60); 
+                $total_minutes += ($diff->h * 60); 
+                $total_minutes += $diff->i; 
+                if (($total_minutes <= 60) && ($total_minutes >= -30)) {
+                    $id = $planification['PlanificationId'];
+                    return $id;
+                }
+            }
+            return $id;
+        }
+
+        function getStudentInPlanification($idCurrentPlanification, $codeStudent){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+            $codeStudent = "A00081";// TODO is for the demonstration : special person for the db
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/".$idCurrentPlanification."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$codeStudent."'");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            return $responseJSON;
+        }
+
+        function filterPlanificationRessourceFromTheStudent($requestStudentInPlanification){
+            $array = json_decode($requestStudentInPlanification, true);
+            foreach ($array['value'] as $student){
+                return $student['Id'];
+            }
+            return 0;
+        }
+
+        function getInformationToPushPresent($IdPlanificationRessource){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/".$IdPlanificationRessource."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            return $responseJSON;
+        }
+
+        function pushPresent($InformationToPushPresent, $IdPlanificationRessource){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            $dateNow = new DateTime("now");
+            echo $dateNow->format('c');
+            $array=json_decode($InformationToPushPresent, true);
+
+            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Badge");
+            print_r($data);
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/". $IdPlanificationRessource);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            if (!$response){
+                return false;
+            }
+            return true;
+        }
+
     }
+
+
+
 ?>

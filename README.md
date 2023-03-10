@@ -24,10 +24,9 @@ Pour l'ensemble de ces requêtes nous prendrons l'exemple sur l'enseignant BAILL
 3. A partir de l'identifiant de l'enseignant, nous allons trouver les cours (nom et id) qu'il enseigne :
     -> ``` https://graphprojet2ainfo.aimaira.net/GraphV1/Enseignant/2216408/EnseignantsCours/?$select=Nom,CoursId ```
 
-4. 
 
---- Nouvelle façon de faire en passant par la salle ---
-1. Lors de la configuration : trouver le `TypeRessourceId` pour trouver celle correspondant à la salle et également celui pour les apprenants.\
+## Nouvelle façon de faire en passant par la salle
+1. Lors de la configuration : trouver le `TypeRessourceId` pour trouver celle correspondant à la salle et également celui pour les apprenants à l'aide du logiciel pandore.\
 La requête correpondante est : `https://graphprojet2ainfo.aimaira.net/GraphV1/TypeRessource/`. \
 La réponse donne : {"Id": 334210,
             "Nom": "Salle",
@@ -37,10 +36,9 @@ La réponse donne : {"Id": 334210,
             "Nom": "Apprenant",
             "Code": "APPRENANT"
         }\
-Dans notre cas l'identifiant correpondant est : 334210.
 
-2. Une fois l'identifiant de type correspondant au salle, prendre toutes les salles : `https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/?$filter=TypeRessourceId eq 334210&$select=Id, Nom`\
-Nous choississon de ne récupérer seulement les champs qui nous interessent : id et nom.
+2. Une fois l'identifiant de type correspondant aux salles, prendre toutes les salles : `https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/?$filter=TypeRessourceId eq 334210&$select=Id, Nom`\
+Nous choississons de ne récupérer seulement les champs qui nous interessent : id et nom.
 Ensuite nous sélectionnons la salle correspondant à notre boitier, ici nous prendrons la salle "C-301" : {"Id": 2225785, "Nom": "C-301"}
 
 3. Puis nous cherchons à trouver la planification correpondant à l'heure actuelle : `https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/2225785/PlanificationRessources?$select=PlanificationId, PlanificationDebut,PlanificationFin`\

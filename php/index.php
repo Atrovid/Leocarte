@@ -47,7 +47,8 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
         $studentID = requestCurlGetStudentID($tagLogID);        
         $codeStudent = substr($studentID, -6);
         echo "The code of student is : ".$codeStudent;
-        $salle="C-301";
+        $nameRoom="C-301";
+        $present = putPresent($codeStudent, $nameRoom);
     }
      
     

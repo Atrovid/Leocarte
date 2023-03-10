@@ -2,6 +2,7 @@
 
 
 require_once('src/models/model.php');
+require_once('src/models/model_api.php');
 
 
 $db = (new Model());
@@ -120,6 +121,27 @@ function getResultFromAimaira(){
 	//echo $code1;
 	$code2 = $db->getACode($arrayOfCode, 'A0008999');
 	echo $code2;
+}
+
+function putPresent($codeStudent, $nameRoom){
+	$modelAPI = new ModelApi();
+	$IdRoom = $modelAPI->getIDRoomFromNameOfRoom($codeStudent, $nameRoom);
+	echo "Id room is  : ".$IdRoom;
+	$planifications = $modelAPI->getPlanificationsForTheRoom($IdRoom);
+	echo $planifications;
+	$idCurrentPlannification = $modelAPI->filterCurrentPlanification($planifications);
+	echo "Id of current planification : ".$idCurrentPlannification;
+	$requestStudentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $codeStudent);
+	echo $requestStudentInPlanification;
+	$IdPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($requestStudentInPlanification);
+	echo "Id of Planification Ressource is : ".$IdPlanificationRessource;
+	$informationToPushPresent = $modelAPI->getInformationToPushPresent($IdPlanificationRessource);
+	$check = $modelAPI->pushPresent($informationToPushPresent,$IdPlanificationRessource);
+	if ($check == true){
+		echo "Opération réussie";
+	} else {
+		echo "KO";
+	}
 }
 
 ?>
