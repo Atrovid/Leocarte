@@ -42,13 +42,16 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     }
     
     else if($_GET['action'] == 'curl' ) {
-        $csnDavid = "041818AA7E6780";
-        $tagLogID = requestCurlGetTagLogID($csnDavid); 
-        $studentID = requestCurlGetStudentID($tagLogID);        
-        $codeStudent = substr($studentID, -6);
-        echo "The code of student is : ".$codeStudent;
-        $nameRoom="C-301";
-        $present = putPresent($codeStudent, $nameRoom);
+        //if (isset($_GET['csn'])){
+            //$csn=$_GET['csn'];
+            $csnExample = "041818AA7E6780";
+            $tagLogID = requestCurlGetTagLogID($csnExample); 
+            $studentID = requestCurlGetStudentID($tagLogID);        
+            $codeStudent = substr($studentID, -6);
+            echo "The code of student is : ".$codeStudent;
+            $nameRoom="C-301";
+            $present = putPresent($codeStudent, $nameRoom);
+        //}
     }
      
     

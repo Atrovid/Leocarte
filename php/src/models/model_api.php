@@ -266,12 +266,31 @@
             return $id;
         }
 
+        function filterStartDate($planificationJSON){
+            $array = json_decode($planificationJSON, true);
+            $id = 0;
+            $dateNow = new DateTime("now");
+
+            foreach ($array['value'] as $planification) {
+                $dateStartSeance = new DateTime($planification['PlanificationDebut']);
+                $diff = $dateNow->diff($dateStartSeance);
+                $total_minutes = ($diff->days * 24 * 60); 
+                $total_minutes += ($diff->h * 60); 
+                $total_minutes += $diff->i; 
+                if (($total_minutes <= 60) && ($total_minutes >= -30)) {
+                    $id = $planification['PlanificationId'];
+                    $dateStart = $planification['PlanificationDebut'];
+                    return $dateStart;
+                }
+            }
+            return $dateNow;
+        }
+
         function getStudentInPlanification($idCurrentPlanification, $codeStudent){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
             $password = $cf['API_password'];
             $ch = curl_init();
-            $codeStudent = "A00081";// TODO is for the demonstration : special person for the db
             curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/".$idCurrentPlanification."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$codeStudent."'");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
@@ -303,6 +322,25 @@
             return $responseJSON;
         }
 
+        function getControlePresence($InformationToPushPresent){
+            $array = json_decode($InformationToPushPresent, true);
+            return $array["ProvenancePresence"];
+        }
+
+        function getStudents($idCurrentPlanification){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/".$idCurrentPlanification."/PlanificationsRessource?\$select=Id,Code&\$filter=TypeRessourceId%20eq%20334212");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            return $responseJSON;
+        }
+
         function pushPresent($InformationToPushPresent, $IdPlanificationRessource){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
@@ -313,7 +351,35 @@
             echo $dateNow->format('c');
             $array=json_decode($InformationToPushPresent, true);
 
-            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Badge");
+            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
+            print_r($data);
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/". $IdPlanificationRessource);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            if (!$response){
+                return false;
+            }
+            return true;
+        }
+
+
+        function pushAbsent($InformationToPushPresent, $IdPlanificationRessource, $dateStartSeance){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            $dateNow = new DateTime("now");
+            echo $dateNow->format('c');
+            $array=json_decode($InformationToPushPresent, true);
+
+            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
             print_r($data);
             curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/". $IdPlanificationRessource);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -331,7 +397,4 @@
         }
 
     }
-
-
-
 ?>

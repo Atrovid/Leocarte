@@ -26,7 +26,7 @@ Pour l'ensemble de ces requêtes nous prendrons l'exemple sur l'enseignant BAILL
 
 
 ## Nouvelle façon de faire en passant par la salle
-1. Lors de la configuration : trouver le `TypeRessourceId` pour trouver celle correspondant à la salle et également celui pour les apprenants à l'aide du logiciel pandore.\
+1. Lors de la configuration : trouver le `TypeRessourceId` pour trouver celle correspondant à la salle et également celui pour les apprenants à l'aide du logiciel postman.\
 La requête correpondante est : `https://graphprojet2ainfo.aimaira.net/GraphV1/TypeRessource/`. \
 La réponse donne : {"Id": 334210,
             "Nom": "Salle",

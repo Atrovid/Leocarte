@@ -130,18 +130,54 @@ function putPresent($codeStudent, $nameRoom){
 	$planifications = $modelAPI->getPlanificationsForTheRoom($IdRoom);
 	echo $planifications;
 	$idCurrentPlannification = $modelAPI->filterCurrentPlanification($planifications);
+	$dateStartSeance = $modelAPI->filterStartDate($planifications);
+	echo "Date start : ".$dateStartSeance;
+	session_start();
+	echo "Current id planification is : ".$idCurrentPlannification;
+	if (isset($_SESSION["currentPlanification"])){
+		echo "session current planification :".$_SESSION["currentPlanification"];
+	}
+	if (((!isset($_SESSION["currentPlanification"])) || ($idCurrentPlannification != $_SESSION["currentPlanification"]))==1){
+		echo "IN IF !";
+		$_SESSION["currentPlanification"]=$idCurrentPlannification;
+		$_SESSION["isFirst"] = false;
+	}
+	
 	echo "Id of current planification : ".$idCurrentPlannification;
+	$codeStudent = "A00082";// TODO is for the demonstration : special person for the db
 	$requestStudentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $codeStudent);
 	echo $requestStudentInPlanification;
 	$IdPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($requestStudentInPlanification);
 	echo "Id of Planification Ressource is : ".$IdPlanificationRessource;
 	$informationToPushPresent = $modelAPI->getInformationToPushPresent($IdPlanificationRessource);
+	echo "InformationToPushPresent : ".$informationToPushPresent;
+	$controlePresence = $modelAPI->getControlePresence($informationToPushPresent);
+
+	if ($_SESSION["isFirst"] == false){
+		$codesOfStudent = $modelAPI->getStudents($idCurrentPlannification);
+		$array = json_decode($codesOfStudent, true);
+		print_r($array);
+		foreach ($array['value'] as $student){
+			echo "In foreach";
+			echo $student['Code'];
+			$identificationStudent = $student['Code'];
+			$studentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $identificationStudent);
+			$identificationPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($studentInPlanification);
+			$informationToPushAbsent = $modelAPI->getInformationToPushPresent($identificationPlanificationRessource);
+			$modelAPI->pushAbsent($informationToPushAbsent, $identificationPlanificationRessource, $dateStartSeance);
+		}
+		$_SESSION["isFirst"] = true;
+	} else {
+		echo "Controle Presence is not null";
+	}
+
 	$check = $modelAPI->pushPresent($informationToPushPresent,$IdPlanificationRessource);
 	if ($check == true){
 		echo "Opération réussie";
 	} else {
 		echo "KO";
 	}
+	return $check;
 }
 
 ?>
