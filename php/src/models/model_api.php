@@ -90,7 +90,6 @@
             $ch = curl_init();
 
             $dateNow = new DateTime("now");
-            echo $dateNow->format('c');
             $array=json_decode($InformationToPushPresent, true);
 
             $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
