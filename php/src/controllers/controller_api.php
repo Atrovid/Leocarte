@@ -84,7 +84,7 @@
         }
         if($_SERVER["REQUEST_METHOD"]=="POST"){
             $studentID = $_POST['studentID'];
-            echo "Le numéro etudiant est : " . $studentID;
+            //echo "Le numéro etudiant est : " . $studentID;
             return $studentID;
         }
 

@@ -403,7 +403,8 @@
                 if (!isset($studentID)){
                     echo "Veuillez entrer un numéroID";
                 }
-                print "Le numéro de l'étudiant est : ". $studentID;
+                //print "Le numéro de l'étudiant est : ". $studentID;
+                return $studentID;
 
             }
         }

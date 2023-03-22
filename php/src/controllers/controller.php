@@ -81,10 +81,10 @@ function getInfoFromForm(){
 	$db= new Model();
 	if($_SERVER["REQUEST_METHOD"]=="GET"){
 		require('src/views/viewForm.php');
-		
+
 	}
 	if($_SERVER["REQUEST_METHOD"]=="POST"){
-		$id_subject = $_POST['id_subject']; 
+		$id_subject = $_POST['id_subject'];
         $start_hour = $_POST['start_hour'];
         $end_hour = $_POST['end_hour'];
 		$db->addClass(3,1,103,$id_subject,$start_hour,$end_hour);
@@ -126,14 +126,14 @@ function getResultFromAimaira(){
 function putPresent($codeStudent, $nameRoom){
 	$modelAPI = new ModelApi();
 	$IdRoom = $modelAPI->getIDRoomFromNameOfRoom($codeStudent, $nameRoom);
-	echo "Id room is  : ".$IdRoom;
+	//echo "Id room is  : ".$IdRoom;
 	$planifications = $modelAPI->getPlanificationsForTheRoom($IdRoom);
-	echo $planifications;
+	//echo $planifications;
 	$idCurrentPlannification = $modelAPI->filterCurrentPlanification($planifications);
 	$dateStartSeance = $modelAPI->filterStartDate($planifications);
-	echo "Date start : ".$dateStartSeance;
+	//echo "Date start : ".$dateStartSeance;
 	session_start();
-	echo "Current id planification is : ".$idCurrentPlannification;
+	//echo "Current id planification is : ".$idCurrentPlannification;
 	if (isset($_SESSION["currentPlanification"])){
 		echo "session current planification :".$_SESSION["currentPlanification"];
 	}
@@ -143,14 +143,14 @@ function putPresent($codeStudent, $nameRoom){
 		$_SESSION["isFirst"] = false;
 	}
 	
-	echo "Id of current planification : ".$idCurrentPlannification;
-	$codeStudent = "A00082";// TODO is for the demonstration : special person for the db
+	//echo "Id of current planification : ".$idCurrentPlannification;
+	//$codeStudent = "A00082";// TODO is for the demonstration : special person for the db
 	$requestStudentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $codeStudent);
-	echo $requestStudentInPlanification;
+	//echo $requestStudentInPlanification;
 	$IdPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($requestStudentInPlanification);
-	echo "Id of Planification Ressource is : ".$IdPlanificationRessource;
+	//echo "Id of Planification Ressource is : ".$IdPlanificationRessource;
 	$informationToPushPresent = $modelAPI->getInformationToPushPresent($IdPlanificationRessource);
-	echo "InformationToPushPresent : ".$informationToPushPresent;
+	//echo "InformationToPushPresent : ".$informationToPushPresent;
 	$controlePresence = $modelAPI->getControlePresence($informationToPushPresent);
 
 	if ($_SESSION["isFirst"] == false){
@@ -158,8 +158,8 @@ function putPresent($codeStudent, $nameRoom){
 		$array = json_decode($codesOfStudent, true);
 		print_r($array);
 		foreach ($array['value'] as $student){
-			echo "In foreach";
-			echo $student['Code'];
+			//echo "In foreach";
+			//echo $student['Code'];
 			$identificationStudent = $student['Code'];
 			$studentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $identificationStudent);
 			$identificationPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($studentInPlanification);
