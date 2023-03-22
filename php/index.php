@@ -32,8 +32,8 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     }
     else */
     if($_GET['action'] == 'form' ) {
-        getTeacherInformationFromForm(); 
-    } 
+        getTeacherInformationFromForm();
+    }
     else if($_GET['action'] == 'attendance') {
         display();
     } else if ($_GET['action'] == 'export_csv') {
@@ -42,18 +42,18 @@ if (isset($_GET['action']) && $_GET['action'] !== '') {
     }
     
     else if($_GET['action'] == 'curl' ) {
-        //if (isset($_GET['csn'])){
-            //$csn=$_GET['csn'];
-            $csnExample = "041818AA7E6780";
-            $tagLogID = requestCurlGetTagLogID($csnExample); 
-            $studentID = requestCurlGetStudentID($tagLogID);        
-            $codeStudent = substr($studentID, -6);
-            echo "The code of student is : ".$codeStudent;
-            $nameRoom="C-301";
-            $present = putPresent($codeStudent, $nameRoom);
-        //}
+        $csnDavid = "041818AA7E6780";
+        $tagLogID = requestCurlGetTagLogID($csnDavid);
+        $studentID = requestCurlGetStudentID($tagLogID);
+        $codeStudent = substr($studentID, -6);
+        echo "The code of student is : ".$codeStudent;
+        $nameRoom="C-301";
+        $present = putPresent($codeStudent, $nameRoom);
     }
-     
+    else if($_GET['action'] == 'presentForm'){
+        getInfoFromPresentForm();
+    }
+
     
     /*else if($_GET['action'] == 'api'){
         getResultFromAimaira();

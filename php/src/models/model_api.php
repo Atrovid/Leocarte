@@ -396,5 +396,16 @@
             return true;
         }
 
+        public function getInfoFromPresentForm(){
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $studentID = $_POST['studentID'];
+
+                if (!isset($studentID)){
+                    echo "Veuillez entrer un numéroID";
+                }
+                print "Le numéro de l'étudiant est : ". $studentID;
+
+            }
+        }
     }
 ?>
