@@ -76,4 +76,20 @@
             fclose($fp);
         }
     }
+
+    function getInfoFromPresentForm(){
+        if($_SERVER["REQUEST_METHOD"]=="GET"){
+            require('src/views/viewFormAddStudentPresent.php');
+    
+        }
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $studentID = $_POST['studentID'];
+            //echo "Le numéro etudiant est : " . $studentID;
+            return $studentID;
+        }
+
+
+    }
+
+
 ?>

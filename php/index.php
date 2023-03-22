@@ -26,7 +26,11 @@
                 echo "L'action n'est pas connue";
                 die;
             }
-
+        } else if($_GET['action'] == 'presentForm'){
+                $studentID = (string)getInfoFromPresentForm();
+                //echo "Le numéro etudiant transmis est : ". $studentID;
+                $nameRoom ="C-301";
+                $present = putPresent($studentID, $nameRoom);
         } else {
             return "Error";
         }

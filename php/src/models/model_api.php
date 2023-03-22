@@ -148,5 +148,14 @@
             $result = $nom."/".$prenom;
             return $result;
         }
+        public function getInfoFromPresentForm(){
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $studentID = $_POST['studentID'];
+                if (!isset($studentID)){
+                    echo "Veuillez entrer un numéroID";
+                }
+                return $studentID;
+            }
+        }
     }
 ?>
