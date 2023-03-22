@@ -1,72 +1,35 @@
-<?php
+<!DOCTYPE html>
+<html>
+    <?php
+        require_once('src/controllers/controller.php');
+        require_once('src/controllers/requestTagCSN.php');
 
 
-require_once('src/controllers/controller.php');
-require_once('src/controllers/controller_api.php');
+        if (isset($_GET['action']) && $_GET['action'] !== '') {
+            if($_GET['action'] == 'curl' ) {
+                if (isset($_GET['csn']) && $_GET['nameRoom']){
+                    $csn=$_GET['csn'];
+                    $nameRoom =$_GET['nameRoom'];
+                    $codeStudent = logCSN($csn);
+                    if ($codeStudent !== "ERROR"){
+                        $present = putPresent($codeStudent, $nameRoom);
+                    } else {
+                        return "Error";
+                        die;
+                    }
+                } else {
+                    return "Error";
+                    die;
+                }
+            }        
+            else{
+                echo "L'action n'est pas connue";
+                die;
+            }
 
+        } else {
+            return "Error";
+        }
 
-if (isset($_GET['action']) && $_GET['action'] !== '') {
-	/*if ($_GET['action'] === 'create') {
-        createDatabase();
-    } 
-    else if ($_GET['action'] === 'destroy') {
-        dropTable();
-    } 
-    else if($_GET['action'] === 'add') {
-        addInfoIntoDatabase();
-    }
-    else if($_GET['action'] === 'delete') {
-        deleteInfoIntoDatabase();
-    }
-    else if($_GET['action'] === 'display') {
-        displayDatabase();
-    } 
-    else if($_GET['action'] == 'check' ) {
-        checkStudentInClass();
-    } 
-    else if($_GET['action'] == 'confirm' ) {
-        setStudentPresence($_GET['number'], $_GET['room']);
-    } 
-    else if ($_GET['action'] === 'attendance') {
-        attendance();
-    }
-    else */
-    if($_GET['action'] == 'form' ) {
-        getTeacherInformationFromForm(); 
-    } 
-    else if($_GET['action'] == 'attendance') {
-        display();
-    } else if ($_GET['action'] == 'export_csv') {
-        echo "coucou";
-        convertInCSV();
-    }
-    
-    else if($_GET['action'] == 'curl' ) {
-        //if (isset($_GET['csn'])){
-            //$csn=$_GET['csn'];
-            $csnExample = "041818AA7E6780";
-            $tagLogID = requestCurlGetTagLogID($csnExample); 
-            $studentID = requestCurlGetStudentID($tagLogID);        
-            $codeStudent = substr($studentID, -6);
-            echo "The code of student is : ".$codeStudent;
-            $nameRoom="C-301";
-            $present = putPresent($codeStudent, $nameRoom);
-        //}
-    }
-     
-    
-    /*else if($_GET['action'] == 'api'){
-        getResultFromAimaira();
-    }*/
-    else{
-        echo "L'action n'est pas connue";
-        die;
-	}
-
-} else {
-	error404(); //Eventually redirect to the home/login page
-}
-
-
-
-?>
+    ?>
+</html>

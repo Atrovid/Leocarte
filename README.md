@@ -13,17 +13,6 @@ http://localhost/leocarte/leocarte/php/?action=api
 
 Pour utiliser l'application: mettre php curl : sudo apt-get install php-curl
 
-## Requete relative à Aimaira :
-Pour l'ensemble de ces requêtes nous prendrons l'exemple sur l'enseignant BAILLY Michel :
-
-1. Tout d'abord pour accéder à notre plateforme, l'enseignant sera amené à entrer son nom et prénom :
-
-2. A partir du nom et prénom retourne l'id:
-    -> ``` https://graphprojet2ainfo.aimaira.net/GraphV1/Enseignant?$filter=Nom eq 'BAILLY Michel' ```
-
-3. A partir de l'identifiant de l'enseignant, nous allons trouver les cours (nom et id) qu'il enseigne :
-    -> ``` https://graphprojet2ainfo.aimaira.net/GraphV1/Enseignant/2216408/EnseignantsCours/?$select=Nom,CoursId ```
-
 
 ## Nouvelle façon de faire en passant par la salle
 1. Lors de la configuration : trouver le `TypeRessourceId` pour trouver celle correspondant à la salle et également celui pour les apprenants à l'aide du logiciel postman.\

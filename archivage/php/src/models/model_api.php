@@ -209,50 +209,52 @@
             return 0;
         }
         
-/***********************************************/
-
-        function appelGetAPI($request){
+        function getIDRoomFromNameOfRoom($codeStudent, $nameRoomSearch){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
             $password = $cf['API_password'];
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, $request);
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/?\$filter=TypeRessourceId%20eq%20334210&\$select=Id,%20Nom");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
             curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            $reponseJSON = curl_exec($ch);
+            $responseJSON = curl_exec($ch);
             curl_close($ch);
-            return $reponseJSON;
-        }
-
-        function recupererIdTypeRessource($reponseJSON){
-            $array=json_decode($reponseJSON, true);
-            foreach ($array['value'] as $typeRessource){
-                $idTypeRessource = $typeRessource['Id'];
-            }
-            return $idTypeRessource;
-        }
-
-        function recupererIdSalle($reponseJSON, $nomSalleRecherchee){
-            $array= json_decode($reponseJSON, true);
-            foreach ($array['value'] as $salle){
-                $nomSalle = $salle['Nom'];
-                if (strcmp($nomSalle, $nomSalleRecherchee) == 0){
-                    return $salle['Id'];
+            
+            $array= json_decode($responseJSON, true);
+            foreach ($array['value'] as $room){
+                $nameRoom = $room['Nom'];
+                if (strcmp($nameRoom, $nameRoomSearch) == 0){
+                    return $room['Id'];
                 }
             }
             return 0;
         }
 
-        function recupererIdPlanificationCourante($planificationsJSON){
-            $array = json_decode($planificationsJSON, true);
+        function getPlanificationsForTheRoom($IdRoom){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/Ressource/".$IdRoom."/PlanificationRessources?\$select=PlanificationId,PlanificationDebut,PlanificationFin");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            $responseJSON = curl_exec($ch);
+            curl_close($ch);
+            return $responseJSON;
+        }
+
+        function filterCurrentPlanification($planificationJSON){
+            $array = json_decode($planificationJSON, true);
             $id = 0;
-            $dateMaintenant = new DateTime("now");
+            $dateNow = new DateTime("now");
 
             foreach ($array['value'] as $planification) {
-                $dateDebutSeance = new DateTime($planification['PlanificationDebut']);
-                $diff = $dateMaintenant->diff($dateDebutSeance);
+                $dateStartSeance = new DateTime($planification['PlanificationDebut']);
+                $diff = $dateNow->diff($dateStartSeance);
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
@@ -264,102 +266,25 @@
             return $id;
         }
 
-        function filtrerDateDebut($planificationsJSON){
-            $array = json_decode($planificationsJSON, true);
+        function filterStartDate($planificationJSON){
+            $array = json_decode($planificationJSON, true);
             $id = 0;
-            $dateMaintenant = new DateTime("now");
+            $dateNow = new DateTime("now");
 
             foreach ($array['value'] as $planification) {
-                $dateDebutSeance = new DateTime($planification['PlanificationDebut']);
-                $diff = $dateMaintenant->diff($dateDebutSeance);
+                $dateStartSeance = new DateTime($planification['PlanificationDebut']);
+                $diff = $dateNow->diff($dateStartSeance);
                 $total_minutes = ($diff->days * 24 * 60); 
                 $total_minutes += ($diff->h * 60); 
                 $total_minutes += $diff->i; 
                 if (($total_minutes <= 60) && ($total_minutes >= -30)) {
                     $id = $planification['PlanificationId'];
-                    $dateDebutSeance = $planification['PlanificationDebut'];
-                    return $dateDebutSeance;
+                    $dateStart = $planification['PlanificationDebut'];
+                    return $dateStart;
                 }
             }
+            return $dateNow;
         }
-
-        function recupererPlanificationRessourceEtudiant($requestStudentInPlanification){
-            $array = json_decode($requestStudentInPlanification, true);
-            foreach ($array['value'] as $student){
-                return $student['Id'];
-            }
-            return 0;
-        }
-
-        function metEtudiantAbsent($InformationToPushPresent, $IdPlanificationRessource, $beginUrl){
-            $cf = parse_ini_file('config.ini');
-            $username = $cf['API_username'];
-            $password = $cf['API_password'];
-            $ch = curl_init();
-
-            $dateNow = new DateTime("now");
-            echo $dateNow->format('c');
-            $array=json_decode($InformationToPushPresent, true);
-
-            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
-            print_r($data);
-            curl_setopt($ch, CURLOPT_URL, $beginUrl."/PlanificationRessource/". $IdPlanificationRessource);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-        }
-
-        function metTousEtudiantsAbsents($codesEtudiantJSON, $beginUrl, $idPlanificationCourante){
-            $array = json_decode($codesEtudiantJSON, true);
-            print_r($array);
-            foreach ($array['value'] as $etudiant){
-                $idEtudiant = $etudiant['Code'];
-                $url = $beginUrl."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$idEtudiant."'";
-                echo $url;
-                echo appelGetAPI($url);
-                $idPlanificationRessourceEtudiant = recupererPlanificationRessourceEtudiant(appelGetAPI($url));
-                $url = $beginUrl."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
-                $informationsPourMettreAbsent = this->appelGetAPI($url);
-                metEtudiantAbsent($informationsPourMettreAbsent, $idPlanificationRessourceEtudiant, $beginUrl);
-            }
-        }
-
-        function metEtudiantPresent($InformationToPushPresent, $IdPlanificationRessource, $beginUrl){
-            $cf = parse_ini_file('config.ini');
-            $username = $cf['API_username'];
-            $password = $cf['API_password'];
-            $ch = curl_init();
-
-            $dateNow = new DateTime("now");
-            echo $dateNow->format('c');
-            $array=json_decode($InformationToPushPresent, true);
-
-            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
-            print_r($data);
-            curl_setopt($ch, CURLOPT_URL, $beginUrl."/PlanificationRessource/". $IdPlanificationRessource);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-        }
-
-
-
-
-/*****************************************/
-
-
-
-
 
         function getStudentInPlanification($idCurrentPlanification, $codeStudent){
             $cf = parse_ini_file('config.ini');
@@ -375,7 +300,13 @@
             return $responseJSON;
         }
 
-        
+        function filterPlanificationRessourceFromTheStudent($requestStudentInPlanification){
+            $array = json_decode($requestStudentInPlanification, true);
+            foreach ($array['value'] as $student){
+                return $student['Id'];
+            }
+            return 0;
+        }
 
         function getInformationToPushPresent($IdPlanificationRessource){
             $cf = parse_ini_file('config.ini');
@@ -410,10 +341,60 @@
             return $responseJSON;
         }
 
-        
+        function pushPresent($InformationToPushPresent, $IdPlanificationRessource){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            $dateNow = new DateTime("now");
+            echo $dateNow->format('c');
+            $array=json_decode($InformationToPushPresent, true);
+
+            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
+            print_r($data);
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/". $IdPlanificationRessource);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            if (!$response){
+                return false;
+            }
+            return true;
+        }
 
 
-        
+        function pushAbsent($InformationToPushPresent, $IdPlanificationRessource, $dateStartSeance){
+            $cf = parse_ini_file('config.ini');
+            $username = $cf['API_username'];
+            $password = $cf['API_password'];
+            $ch = curl_init();
+
+            $dateNow = new DateTime("now");
+            echo $dateNow->format('c');
+            $array=json_decode($InformationToPushPresent, true);
+
+            $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
+            print_r($data);
+            curl_setopt($ch, CURLOPT_URL, "https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/". $IdPlanificationRessource);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
+            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+            if (!$response){
+                return false;
+            }
+            return true;
+        }
 
     }
 ?>
