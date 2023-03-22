@@ -94,7 +94,6 @@
             $array=json_decode($InformationToPushPresent, true);
 
             $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
-            print_r($data);
             curl_setopt($ch, CURLOPT_URL, $beginUrl."/PlanificationRessource/". $IdPlanificationRessource);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
@@ -112,8 +111,6 @@
             foreach ($array['value'] as $etudiant){
                 $idEtudiant = $etudiant['Code'];
                 $url = $beginUrl."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$idEtudiant."'";
-                echo $url;
-                echo appelGetAPI($url);
                 $idPlanificationRessourceEtudiant = recupererPlanificationRessourceEtudiant(appelGetAPI($url));
                 $url = $beginUrl."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
                 $informationsPourMettreAbsent = this->appelGetAPI($url);
@@ -128,11 +125,9 @@
             $ch = curl_init();
 
             $dateNow = new DateTime("now");
-            echo $dateNow->format('c');
             $array=json_decode($InformationToPushPresent, true);
 
             $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "true", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
-            print_r($data);
             curl_setopt($ch, CURLOPT_URL, $beginUrl."/PlanificationRessource/". $IdPlanificationRessource);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_USERPWD, $username . ':' . $password);
@@ -142,6 +137,16 @@
 
             $response = curl_exec($ch);
             curl_close($ch);
+        }
+
+        function recupereNomPrenom($reponseJSON){
+            $array=json_decode($reponseJSON, true);
+            foreach ($array['value'] as $etudiant){
+                $nom = $etudiant['NomUsage'];
+                $prenom = $etudiant['PrenomUsage'];
+            }
+            $result = $nom."/".$prenom;
+            return $result;
         }
     }
 ?>

@@ -26,7 +26,6 @@ function putPresent($codeEtudiant, $nomSalle){
 	$planifications = $modelAPI->appelGetAPI($url);
 	$idPlanificationCourante = $modelAPI->recupererIdPlanificationCourante($planifications);
 	$dateDebutSeance = $modelAPI->filtrerDateDebut($planifications);
-	echo $idPlanificationCourante;
 
 	/* Mise en place d'une session qui va permettre de mettre une seule fois tout
 	le monde absent lorsque la première personne à badger */
@@ -45,7 +44,6 @@ function putPresent($codeEtudiant, $nomSalle){
 		$codesEtudiant = $modelAPI->appelGetAPI($url);
 		/* Mettre ensemble des étudiants absents */
 		$array = json_decode($codesEtudiant, true);
-            print_r($array);
             foreach ($array['value'] as $etudiant){
                 $idEtudiant = $etudiant['Code'];
                 $url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$idEtudiant."'";
@@ -64,9 +62,10 @@ function putPresent($codeEtudiant, $nomSalle){
 	$url = $beginURL."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
 	$informationsPourMettrePresent = $modelAPI->appelGetAPI($url);
 	$modelAPI->metEtudiantPresent($informationsPourMettrePresent, $idPlanificationRessourceEtudiant, $beginURL);
-
-
-	return true;
+	$url = $beginURL."/Apprenant?\$filter=Code%20eq%20'".$codeEtudiant."'&\$select=NomUsage,PrenomUsage";
+	$result = $modelAPI->recupereNomPrenom($modelAPI->appelGetAPI($url));
+	echo $result;
+	return $result;
 }
 
 ?>
