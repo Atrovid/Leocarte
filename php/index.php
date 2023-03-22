@@ -1,54 +1,40 @@
-<?php
+<!DOCTYPE html>
+<html>
+    <?php
+        require_once('src/controllers/controller.php');
+        require_once('src/controllers/requestTagCSN.php');
 
 
-require_once('src/controllers/controller.php');
+        if (isset($_GET['action']) && $_GET['action'] !== '') {
+            if($_GET['action'] == 'curl' ) {
+                if (isset($_GET['csn']) && $_GET['nameRoom']){
+                    $csn=$_GET['csn'];
+                    $nameRoom =$_GET['nameRoom'];
+                    $codeStudent = logCSN($csn);
+                    if ($codeStudent !== "ERROR"){
+                        /* Le codeEtudiant est directement assigné pour notre base de donnée
+                        Il s'agit donc d'une ligne à supprimer lors de la mise en place sur une autre bdd que le bac à sable*/
+                        $codeEtudiant = "A00081";
+                        $present = putPresent($codeStudent, $nameRoom);
+                    } else {
+                        return "Error";
+                        die;
+                    }
+                } else {
+                    return "Error";
+                    die;
+                }
+            } else if($_GET['action'] == 'presentForm'){
+                $studentID = (string)getInfoFromPresentForm();
+                $nameRoom ="C-301";
+                $present = putPresent($studentID, $nameRoom);
+            }else{
+                echo "L'action n'est pas connue";
+                die;
+            }
+        } else {
+            return "Error";
+        }
 
-
-if (isset($_GET['action']) && $_GET['action'] !== '') {
-	if ($_GET['action'] === 'create') {
-        createDatabase();
-    } 
-    else if ($_GET['action'] === 'destroy') {
-        dropTable();
-    } 
-    else if($_GET['action'] === 'add') {
-        addInfoIntoDatabase();
-    }
-    else if($_GET['action'] === 'delete') {
-        deleteInfoIntoDatabase();
-    }
-    else if($_GET['action'] === 'display') {
-        displayDatabase();
-    } 
-    else if($_GET['action'] == 'check' ) {
-        checkStudentInClass();
-    } 
-    else if($_GET['action'] == 'confirm' ) {
-        setStudentPresence($_GET['number'], $_GET['room']);
-    } 
-    else if ($_GET['action'] === 'attendance') {
-        attendance();
-    }
-    else if($_GET['action'] == 'form' ) {
-        getInfoFromForm(); 
-    } 
-    else if($_GET['action'] == 'curl' ) {
-        //$csn = ???; //Mettre votre CSN
-        $tagLogID = requestCurlGetTagLogID($csn); 
-        $studentID = requestCurlGetStudentID($tagLogID);
-    } 
-    else if($_GET['action'] == 'api'){
-        getResultFromAimaira();
-    }
-    else{
-        echo "L'action n'est pas connue";
-        die;
-	}
-
-} else {
-	error404(); //Eventually redirect to the home/login page
-}
-
-
-
-?>
+    ?>
+</html>
