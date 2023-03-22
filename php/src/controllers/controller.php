@@ -1,7 +1,5 @@
 <?php
 
-
-//require_once('src/models/model.php');
 require_once('src/models/model_api.php');
 
 
@@ -39,7 +37,7 @@ function putPresent($codeEtudiant, $nomSalle){
 	
 	/* Le codeEtudiant est directement assigné pour notre base de donnée
 	Il s'agit donc d'une ligne à supprimer lors de la mise en place sur une autre bdd que le bac à sable*/
-	$codeEtudiant = "A00082";
+	$codeEtudiant = "A00081";
 
 	/* Première connexion à ce cours : nous mettons d'abord tout les eleves absents */
 	if ($_SESSION["estPremier"] == true){
@@ -66,28 +64,8 @@ function putPresent($codeEtudiant, $nomSalle){
 	$url = $beginURL."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
 	$informationsPourMettrePresent = $modelAPI->appelGetAPI($url);
 	$modelAPI->metEtudiantPresent($informationsPourMettrePresent, $idPlanificationRessourceEtudiant, $beginURL);
-	
-	
-	
-	/*$requestStudentInPlanification = $modelAPI->getStudentInPlanification($idCurrentPlannification, $codeStudent);
-	echo $requestStudentInPlanification;
-	$IdPlanificationRessource = $modelAPI->filterPlanificationRessourceFromTheStudent($requestStudentInPlanification);
-	echo "Id of Planification Ressource is : ".$IdPlanificationRessource;
-	$informationToPushPresent = $modelAPI->getInformationToPushPresent($IdPlanificationRessource);
-	echo "InformationToPushPresent : ".$informationToPushPresent;
-	$controlePresence = $modelAPI->getControlePresence($informationToPushPresent);
 
-	else {
-		echo "Controle Presence is not null";
-	}
 
-	$check = $modelAPI->pushPresent($informationToPushPresent,$IdPlanificationRessource);
-	if ($check == true){
-		echo "Opération réussie";
-	} else {
-		echo "KO";
-	}
-	return $check;*/
 	return true;
 }
 
