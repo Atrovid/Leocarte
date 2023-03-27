@@ -17,6 +17,9 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
+#define HTTPS_PORT 443
+
+
 SoftwareSerial SWSerial(D3, D2); // SDA, SCL
 
 PN532_SWHSU pn532swhsu(SWSerial);
@@ -35,21 +38,33 @@ bool connected = false;
 boolean restart = false;
 
 
+String url = "?action=attendance";
+
+WiFiClientSecure client;
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+String sendAttendance(String csn, String room){
+    Serial.print("Connecting to website: ");
+    Serial.println(host);
+    if (client.connect(host, HTTPS_PORT)) {
+        client.print(String("GET ") + url + "&csn=" + csn + "&room=" + room + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "User-Agent: ESP32\r\n" + "Connection: close\r\n\r\n");
+        while (client.connected()) {
+            String header = client.readStringUntil('\n');
+            Serial.println(header);
+            if (header == "\r") {
+                break;
+            }
+        }
+        String line = client.readStringUntil('\n');
+        Serial.println(line);
+    } else {
+        Serial.println("Connection unsucessful");
+    }
+    return line;
+}
 
 
 
@@ -61,7 +76,7 @@ String readCSN()
     uint8_t uidLength;                     // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
     String csn = "";
 
-    // Wait for an ISO14443A type cards (Mifare, etc.). 
+    // Wait for an ISO14443A type cards (Mifare, etc.).
     success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
 
     if (success)
@@ -89,26 +104,20 @@ String readCSN()
     return csn;
 }
 
-
-
-
-
 // Draws on the LCD screen
-void drawMessage(String name, String surname) {
+void drawMessage(String name, String surname)
+{
     display.clearDisplay();
     int size = 2;
     display.setTextSize(size);
-    display.setTextColor(SSD1306_WHITE);      
-    display.setCursor(0,0);            
+    display.setTextColor(SSD1306_WHITE);
+    display.setCursor(0, 0);
     display.println(name);
-    if ( surname.length() > 12) {
+    if (surname.length() > 12)
+    {
         size = 1;
-    }  
-    display.setTextSize(size);  
-    display.println(surname); 
+    }
+    display.setTextSize(size);
+    display.println(surname);
     display.display();
 }
-
-
-
-
