@@ -61,7 +61,7 @@
 		$modelAPI->metEtudiantPresent($informationsPourMettrePresent, $idPlanificationRessourceEtudiant, $beginURL);
 		$url = $beginURL."/Apprenant?\$filter=Code%20eq%20'".$codeEtudiant."'&\$select=NomUsage,PrenomUsage";
 		$result = $modelAPI->recupereNomPrenom($modelAPI->appelGetAPI($url));
-		echo $result;
+		echo $result;	
 		return $result;
 	}
 	function getInfoFromPresentForm(){
@@ -73,6 +73,4 @@
 			return $studentID;
 		}
 	}
-
-
 ?>

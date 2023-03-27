@@ -147,6 +147,7 @@
             $result = $nom."/".$prenom;
             return $result;
         }
+
         public function getInfoFromPresentForm(){
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $studentID = $_POST['studentID'];
