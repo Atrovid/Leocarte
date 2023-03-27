@@ -1,5 +1,63 @@
 # Projet 2A : Lecteur de Léocarte
 
+## Arborescence du projet
+
+```bash
+.
+├── archivage
+│ └── php
+│ └── src
+│ ├── controllers
+│ │ ├── controller_api.php
+│ │ ├── controller.php
+│ │ └── export_csv.php
+│ ├── index2.php
+│ ├── js
+│ │ ├── scriptAPI.js
+│ │ ├── scriptForm.js
+│ │ └── script.js
+│ ├── models
+│ │ ├── model_api.php
+│ │ └── model.php
+│ └── views
+│ ├── viewAddInfo.php
+│ ├── viewAttendanceAPI.php
+│ ├── viewAttendance.php
+│ ├── viewConfig.php
+│ ├── viewDelete.php
+│ ├── viewError404.php
+│ ├── viewFormAPI.html
+│ ├── viewForm.php
+│ ├── viewGetInfo.php
+│ ├── viewInfo.php
+│ └── viewSearchStudentInClass.php
+├── doc
+│ ├── Agenda de réunion davancement-1.docx
+│ ├── Consignes pour la constitution du dossier projet-2.docx
+│ ├── etablir_binome.png
+│ ├── Modele de compte rendu de réunion-1.docx
+│ ├── Modele de fiche de tâche-1.docx
+│ └── presence.png
+├── esp8266
+│ └── leocarte_reader
+│ ├── leocarte_reader.ino
+│ └── wifimanager.h
+├── php
+│ ├── config_example.ini
+│ ├── config.ini
+│ ├── index.php
+│ └── src
+│ ├── controllers
+│ │ ├── controller.php
+│ │ └── requestTagCSN.php
+│ ├── models
+│ │ └── model_api.php
+│ └── views
+│ └── viewFormAddStudentPresent.php
+├── rapport.md
+└── README.md
+```
+
 Pour vérifier qu'une database a bien été créée : ?action=attendance  
 Pour vérifier qu'une database a bien été détruite : ?action=destroy  
 Pour vérifier qu'une ligne d'une database a bien été réalisée : ?action=add  
