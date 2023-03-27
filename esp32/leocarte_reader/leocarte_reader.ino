@@ -6,13 +6,15 @@
 #include <SoftwareSerial.h>
 #include <PN532_SWHSU.h>
 #include <PN532.h>
+#include "esp_wpa2.h"
+#include "esp_wifi.h"
+#include "esp_wpa2.h"
 
 #include <EEPROM.h>
 
 #include <WiFiClient.h>
 
-// HTML page for managing connection the network connection
-#include "wifimanager.h"
+#include "login.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -37,6 +39,44 @@ boolean restart = false;
 
 
 
+#define EXAMPLE_EAP_ID "matheus_garbelini"
+
+
+
+void setup() {
+  Serial.begin(115200);
+  if( initWifi() ) {
+    connected = true;   
+    if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+      Serial.println(F("SSD1306 allocation failed"));
+      for(;;); 
+    }
+    drawMessage("welcome", "");
+    nfc.begin();
+
+    uint32_t versiondata = nfc.getFirmwareVersion();
+    while (! versiondata) {
+      Serial.print("Didn't find PN53x board");
+    }
+    Serial.print("Found chip PN5"); Serial.println((versiondata>>24) & 0xFF, HEX); 
+    Serial.print("Firmware ver. "); Serial.print((versiondata>>16) & 0xFF, DEC); 
+    Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);
+
+    nfc.setPassiveActivationRetries(0xFF);
+
+    nfc.SAMConfig();
+
+    Serial.println("Waiting for an ISO14443A card");
+    drawMessage("NFC reader", "connected");    
+    delay(1200);
+    display.clearDisplay();
+    display.display();
+     
+  } else {
+    Serial.println("problem wifi connection ....");
+    ESP.restart();
+  }
+}
 
 
 
@@ -50,7 +90,28 @@ boolean restart = false;
 
 
 
+bool initWifi() {
+  
+  WiFi.disconnect(true);
+  WiFi.mode(WIFI_STA);
+  esp_wpa2_config_t config = WPA2_CONFIG_INIT_DEFAULT();
 
+  ESP_LOGI(TAG, "Setting WiFi configuration SSID %s...", wifi_config.sta.ssid);
+  ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
+  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_identity((uint8_t *)ID, strlen(ID)) );
+  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_username((uint8_t *)USERNAME, strlen(USERNAME)) );
+  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_password((uint8_t *)PASSWORD, strlen(PASSWORD)) );
+  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_enable(&config) );
+  WiFi.begin(SSID);
+  
+  if(WiFi.status() != WL_CONNECTED) {
+    Serial.println("Failed to connect.");
+    return false;
+  }
+  Serial.println(WiFi.localIP());
+  return true
+  
+}
 
 
 String readCSN()

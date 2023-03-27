@@ -117,7 +117,6 @@ bool initWiFi() {
     Serial.println("Failed to connect.");
     return false;
   }
-
   Serial.println(WiFi.localIP());
   return true;
 }
