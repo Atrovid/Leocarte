@@ -6,20 +6,23 @@
 #include <SoftwareSerial.h>
 #include <PN532_SWHSU.h>
 #include <PN532.h>
+
+
 #include "esp_wpa2.h"
 #include "esp_wifi.h"
 #include "esp_wpa2.h"
 
-#include <EEPROM.h>
-
+#include <WiFiClientSecure.h>
 #include <WiFiClient.h>
+#include <HTTPClient.h>
 
-#include "login.h"
+
+#include "config.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
-#define HTTPS_PORT 443
+#define HTTPS_PORT 80
 
 
 SoftwareSerial SWSerial(D3, D2); // SDA, SCL
@@ -42,13 +45,17 @@ boolean restart = false;
 
 String url = "?action=attendance";
 
-WiFiClientSecure client;
+WiFiClient client;
 
 
 
 
 void setup() {
   Serial.begin(115200);
+  delay(10);
+
+  Serial.println("Hello World !");  
+
   if( initWifi() ) {
     connected = true;   
     if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -78,29 +85,66 @@ void setup() {
     display.display();
      
   } else {
-    Serial.println("problem wifi connection ....");
+    Serial.println("Wifi connection failed.");
     ESP.restart();
   }
 }
 
-String sendAttendance(String csn, String room){
-    Serial.print("Connecting to website: ");
-    Serial.println(host);
-    if (client.connect(host, HTTPS_PORT)) {
-        client.print(String("GET ") + url + "&csn=" + csn + "&room=" + room + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "User-Agent: ESP32\r\n" + "Connection: close\r\n\r\n");
-        while (client.connected()) {
-            String header = client.readStringUntil('\n');
-            Serial.println(header);
-            if (header == "\r") {
-                break;
-            }
-        }
-        String line = client.readStringUntil('\n');
-        Serial.println(line);
-    } else {
-        Serial.println("Connection unsucessful");
+
+void loop() {  
+    if (restart){
+        delay(5000);
+        ESP.restart();
     }
-    return line;
+    
+    if (connected){
+        if (!screenCleared){
+        clearCounter ++; 
+        }
+        if (clearCounter>3){
+        clearCounter = 0;
+        screenCleared = true;
+        display.clearDisplay();  
+        display.display();
+        }
+        
+        String csn = readCSN();
+        if (csn != ""){
+          String name = sendAttendance(csn, room);
+          
+          drawMessage(getValue(name, '/', 0),getValue(name, '/', 1));
+
+          screenCleared = false;
+          clearCounter = 0;
+        }
+    }
+
+}
+
+
+String sendAttendance(String csn, String room){
+    String payload;
+    HTTPClient http;
+    Serial.println("Connecting to website: ");
+    String co = protocol + "://"+ host +"/" + url + "&csn=" + csn + "&room="+room;
+    
+    http.begin(co); 
+    
+
+    int httpCode = http.GET();
+    if(httpCode > 0) {
+      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+      //file found at server --> on unsucessful connection code will be -1
+      if(httpCode == HTTP_CODE_OK) {
+        payload = http.getString();
+        Serial.println(payload);
+      }
+     }else{
+      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+      }
+    http.end(); 
+    
+    return payload;
 }
 
 
@@ -117,23 +161,22 @@ bool initWifi() {
   
   WiFi.disconnect(true);
   WiFi.mode(WIFI_STA);
-  esp_wpa2_config_t config = WPA2_CONFIG_INIT_DEFAULT();
 
   ESP_LOGI(TAG, "Setting WiFi configuration SSID %s...", wifi_config.sta.ssid);
   ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
   ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_identity((uint8_t *)ID, strlen(ID)) );
   ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_username((uint8_t *)USERNAME, strlen(USERNAME)) );
   ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_set_password((uint8_t *)PASSWORD, strlen(PASSWORD)) );
-  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_enable(&config) );
+  ESP_ERROR_CHECK( esp_wifi_sta_wpa2_ent_enable() );
   WiFi.begin(SSID);
   
+
   if(WiFi.status() != WL_CONNECTED) {
-    Serial.println("Failed to connect.");
-    return false;
+    delay(500);
+    Serial.print(".");
   }
   Serial.println(WiFi.localIP());
-  return true
-  
+  return true;
 }
 
 
@@ -161,14 +204,17 @@ String readCSN()
             Serial.print(" ");
             Serial.print(uid[i], HEX);
             ltoa(uid[i], myHex, 16); // convert to c string base 16
+            sprintf(myHex, "%02x", uid[i]);
             csn += String(myHex);
         }
         Serial.println("");
+        Serial.println(csn);
     }
     else
     {
         // PN532 probably timed out waiting for a card
         Serial.println("Timed out waiting for a card");
+        delay(100);
     }
     return csn;
 }
@@ -190,3 +236,21 @@ void drawMessage(String name, String surname)
     display.println(surname);
     display.display();
 }
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
