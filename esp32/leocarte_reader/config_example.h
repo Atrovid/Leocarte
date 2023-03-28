@@ -5,8 +5,14 @@
 #define USERNAME ""
 #define PASSWORD ""
 
-
+//Classroom
 String room = "";
+
 String host = "";
+
+//http or https
 String  protocol = "";
+
+//Server certificate if needed
+const char* server_ca = "";
 

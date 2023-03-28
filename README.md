@@ -1,17 +1,18 @@
 # Projet 2A : Lecteur de Léocarte
 
-Pour vérifier qu'une database a bien été créée : ?action=attendance  
-Pour vérifier qu'une database a bien été détruite : ?action=destroy  
-Pour vérifier qu'une ligne d'une database a bien été réalisée : ?action=add  
-Pour vérifier qu'une ligne d'une databse a bien été effacée : ?action=delete  
-Pour vérifier qu'une database a bien été "print" : ?action=display  
+## Configuration du microcontroller ESP32 :
 
-http://localhost/leocarte/leocarte/php/?action=attendance
+Le projet nécessite l'installation des librairies suivantes sur Arduino IDE :
+- Adafruit_GFX (v1.6.1)
+- Adafruit_SSD1306 (v2.0.2)
+- SoftwareSerial (EspSoftwareSerial v8.0.1)
+- PN532_SWHSU
+- PN532 (Ces deux dernières sont à installer manuellement à partir de : https://github.com/elechouse/PN532)
 
-http://localhost/leocarte/leocarte/php/?action=api
+Il faut ensuite compiler et téléverser le 
 
+Il faut créer un fichier config.h (dans le même dossier que leocarte_reader.ino) à partir du fichier config_example.h
 
-Pour utiliser l'application: mettre php curl : sudo apt-get install php-curl
 
 
 ## Nouvelle façon de faire en passant par la salle
@@ -40,3 +41,15 @@ Ici, nous prendrons pour l'identifiant de la Planification : 2247994
 
 5. A partir de l'identifiant récupère toutes ces informations afin de changer la présence à l'aide d'une requette `put` :
 `https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/2247997?$select=Id, PlanificationId, TypeRessourceId, Reference, ControlePresence, ProvenancePresence, Presence`
+
+
+
+
+
+## Prérequis du serveur php :
+
+Le projet utilise la fonction curl, qui provient de l'extension du même nom.
+Pour l'installer : 
+```bash
+sudo apt-get install php-curl
+```

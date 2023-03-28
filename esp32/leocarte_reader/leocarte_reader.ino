@@ -22,7 +22,7 @@
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
-#define HTTPS_PORT 80
+
 
 
 SoftwareSerial SWSerial(D3, D2); // SDA, SCL
@@ -45,7 +45,6 @@ boolean restart = false;
 
 String url = "?action=attendance";
 
-WiFiClient client;
 
 
 
@@ -123,13 +122,20 @@ void loop() {
 
 
 String sendAttendance(String csn, String room){
+    WiFiClientSecure *client = new WiFiClientSecure;
+    client -> setCACert(server_ca);
+
+
     String payload;
     HTTPClient http;
     Serial.println("Connecting to website: ");
     String co = protocol + "://"+ host +"/" + url + "&csn=" + csn + "&room="+room;
-    
+
     http.begin(co); 
-    
+
+    //If the server needs a certificate : 
+    //http.begin(co, server_ca); 
+
 
     int httpCode = http.GET();
     if(httpCode > 0) {
@@ -201,14 +207,14 @@ String readCSN()
         char myHex[4] = "";
         for (uint8_t i = 0; i < uidLength; i++)
         {
-            Serial.print(" ");
-            Serial.print(uid[i], HEX);
+            //Serial.print(" ");
+            //Serial.print(uid[i], HEX);
             ltoa(uid[i], myHex, 16); // convert to c string base 16
             sprintf(myHex, "%02x", uid[i]);
             csn += String(myHex);
         }
         Serial.println("");
-        Serial.println(csn);
+        //Serial.println(csn);
     }
     else
     {
