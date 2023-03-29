@@ -61,7 +61,8 @@ void setup() {
       Serial.println(F("SSD1306 allocation failed"));
       for(;;); 
     }
-    drawMessage("welcome", "");
+    drawMessage("wifi", "connectée");
+    delay(1000);
     nfc.begin();
 
     uint32_t versiondata = nfc.getFirmwareVersion();
@@ -74,17 +75,24 @@ void setup() {
 
     nfc.setPassiveActivationRetries(0xFF);
 
-
     nfc.SAMConfig();
 
     Serial.println("Waiting for an ISO14443A card");
-    drawMessage("NFC reader", "connected");    
-    delay(1200);
+    drawMessage("Lecteur NFC", "connecté");    
+    delay(1000);
     display.clearDisplay();
     display.display();
      
   } else {
     Serial.println("Wifi connection failed.");
+    if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+      Serial.println(F("SSD1306 allocation failed"));
+      for(;;); 
+    }
+    drawMessage("erreur", "wifi");
+    delay(1000);
+    drawMessage("redémarage", "en cours");
+    delay(1000);
     ESP.restart();
   }
 }
@@ -108,7 +116,10 @@ void loop() {
         }
         
         String csn = readCSN();
+        ;
         if (csn != ""){
+          drawMessage("carte", "lue");
+          delay(500);          
           String name = sendAttendance(csn, room);
           
           drawMessage(getValue(name, '/', 0),getValue(name, '/', 1));
@@ -152,16 +163,6 @@ String sendAttendance(String csn, String room){
     
     return payload;
 }
-
-
-
-
-
-
-
-
-
-
 
 bool initWifi() {
   
