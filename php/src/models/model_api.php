@@ -3,6 +3,9 @@
 
     class ModelApi {
 
+        /**
+         * Fonction permettant de faire une requête get qu'importe l'URL.
+         */
         function appelGetAPI($request){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
@@ -18,6 +21,9 @@
             return $reponseJSON;
         }
 
+        /**
+         * Récupère l'identifiant du TypeRessource à partir de la réponse JSON renvoyé par la requête GET.
+         */
         function recupererIdTypeRessource($reponseJSON){
             $array=json_decode($reponseJSON, true);
             foreach ($array['value'] as $typeRessource){
@@ -26,6 +32,9 @@
             return $idTypeRessource;
         }
 
+        /**
+         * Récupère l'identifiant de la salle donné en argument à partir de la réponse JSON.
+         */
         function recupererIdSalle($reponseJSON, $nomSalleRecherchee){
             $array= json_decode($reponseJSON, true);
             foreach ($array['value'] as $salle){
@@ -37,6 +46,9 @@
             return 0;
         }
 
+        /**
+         * Récupére l'idenitification de la planification (=cours) courante à partir de la réponse JSON.
+         */
         function recupererIdPlanificationCourante($planificationsJSON){
             $array = json_decode($planificationsJSON, true);
             $id = 0;
@@ -56,6 +68,9 @@
             return $id;
         }
 
+        /**
+         * 
+         */
         function filtrerDateDebut($planificationsJSON){
             $array = json_decode($planificationsJSON, true);
             $id = 0;
@@ -74,6 +89,9 @@
                 }
             }
         }
+        /**
+         * Récupére dans la planification courante, l'identifiant correspond à la planification ressource de l'étudiant.
+         */
 
         function recupererPlanificationRessourceEtudiant($requestStudentInPlanification){
             $array = json_decode($requestStudentInPlanification, true);
@@ -83,14 +101,17 @@
             return 0;
         }
 
-        function metEtudiantAbsent($InformationToPushPresent, $IdPlanificationRessource, $beginUrl){
+        /**
+         * Cette fonction met un étudiant absent connaissant les informations nécessaire pour faire l'assiduité et l'identifiant de planification ressource de l'étudiant.
+         */
+        function metEtudiantAbsent($InformationToPushAbsent, $IdPlanificationRessource, $beginUrl){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
             $password = $cf['API_password'];
             $ch = curl_init();
 
             $dateNow = new DateTime("now");
-            $array=json_decode($InformationToPushPresent, true);
+            $array=json_decode($InformationToPushAbsent, true);
 
             $data = array("Id" => $IdPlanificationRessource, "PlanificationId"=> $array["PlanificationId"], "TypeRessourceId" => $array["TypeRessourceId"], "Presence" => "false", "Reference" => $array["Reference"], "ControlePresence" => $dateNow->format('c'), "ProvenancePresence" => "Salle");
             curl_setopt($ch, CURLOPT_URL, $beginUrl."/PlanificationRessource/". $IdPlanificationRessource);
@@ -104,6 +125,9 @@
             curl_close($ch);
         }
 
+        /**
+         * Cette fonction permets de mettre tous les étudiants absents. Cette fonction est utilisée au lorsque le premier élève a scanné sa carte.
+         */
         function metTousEtudiantsAbsents($codesEtudiantJSON, $beginUrl, $idPlanificationCourante){
             $array = json_decode($codesEtudiantJSON, true);
             print_r($array);
@@ -117,6 +141,9 @@
             }
         }
 
+        /**
+         * Permet de mettre un étudiant présent de la même manière que nous pouvons le mettre absent.
+         */
         function metEtudiantPresent($InformationToPushPresent, $IdPlanificationRessource, $beginUrl){
             $cf = parse_ini_file('config.ini');
             $username = $cf['API_username'];
@@ -138,6 +165,9 @@
             curl_close($ch);
         }
 
+        /**
+         * Récupére le nom et prénom de l'élève.
+         */
         function recupereNomPrenom($reponseJSON){
             $array=json_decode($reponseJSON, true);
             foreach ($array['value'] as $etudiant){
@@ -147,6 +177,10 @@
             $result = $nom."/".$prenom;
             return $result;
         }
+
+        /**
+         * Récupère le code étudiant du formulaire rempli.
+         */
         public function getInfoFromPresentForm(){
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $studentID = $_POST['studentID'];

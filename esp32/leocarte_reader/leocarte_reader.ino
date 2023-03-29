@@ -139,6 +139,7 @@ String sendAttendance(String csn, String room){
 
     String payload;
     HTTPClient http;
+    http.setTimeout(20000);
     Serial.println("Connecting to website: ");
     String co = protocol + "://"+ host +"/" + url + "&csn=" + csn + "&room="+room;
 

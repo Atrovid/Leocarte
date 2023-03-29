@@ -25,6 +25,9 @@
 		$url = $beginURL."/Ressource/".$idSalle."/PlanificationRessources?\$select=PlanificationId,PlanificationDebut,PlanificationFin";
 		$planifications = $modelAPI->appelGetAPI($url);
 		$idPlanificationCourante = $modelAPI->recupererIdPlanificationCourante($planifications);
+		if ($idPlanificationCourante == 0){
+			return "Erreur/Pas cours";
+		}
 		$dateDebutSeance = $modelAPI->filtrerDateDebut($planifications);
 
 		/* Mise en place d'une session qui va permettre de mettre une seule fois tout
@@ -49,7 +52,6 @@
 					$informationsPourMettreAbsent = $modelAPI->appelGetAPI($url);
 					$modelAPI->metEtudiantAbsent($informationsPourMettreAbsent, $idPlanificationRessourceEtudiant, $beginURL);
 			}
-			//$modelAPI->metTousEtudiantsAbsents($codesEtudiant, $beginURL, $idPlanificationCourante);
 			$_SESSION["estPremier"] = false;
 		} 
 
@@ -61,7 +63,6 @@
 		$modelAPI->metEtudiantPresent($informationsPourMettrePresent, $idPlanificationRessourceEtudiant, $beginURL);
 		$url = $beginURL."/Apprenant?\$filter=Code%20eq%20'".$codeEtudiant."'&\$select=NomUsage,PrenomUsage";
 		$result = $modelAPI->recupereNomPrenom($modelAPI->appelGetAPI($url));
-		echo $result;
 		return $result;
 	}
 	function getInfoFromPresentForm(){
@@ -73,6 +74,4 @@
 			return $studentID;
 		}
 	}
-
-
 ?>
