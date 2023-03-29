@@ -111,13 +111,14 @@ void loop() {
         }
         
         String csn = readCSN();
-        ;
+        drawMessage("presenter", "carte");;
         if (csn != ""){
           drawMessage("carte", "lue");
           delay(500);          
           String name = sendAttendance(csn, room);
           
           drawMessage(getValue(name, '/', 0),getValue(name, '/', 1));
+          delay(2000);
 
           screenCleared = false;
           clearCounter = 0;
