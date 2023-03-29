@@ -16,13 +16,10 @@
 #include <WiFiClient.h>
 #include <HTTPClient.h>
 
-
 #include "config.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
-
-
 
 
 SoftwareSerial SWSerial(D3, D2); // SDA, SCL
@@ -44,8 +41,6 @@ boolean restart = false;
 
 
 String url = "?action=attendance";
-
-
 
 
 
