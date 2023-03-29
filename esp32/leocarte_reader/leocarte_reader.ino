@@ -40,7 +40,7 @@ bool connected = false;
 boolean restart = false;
 
 
-String url = "?action=attendance";
+
 
 
 
@@ -56,7 +56,7 @@ void setup() {
       Serial.println(F("SSD1306 allocation failed"));
       for(;;); 
     }
-    drawMessage("wifi", "connectée");
+    drawMessage("wifi", "connectee");
     delay(1000);
     nfc.begin();
 
@@ -73,7 +73,7 @@ void setup() {
     nfc.SAMConfig();
 
     Serial.println("Waiting for an ISO14443A card");
-    drawMessage("Lecteur NFC", "connecté");    
+    drawMessage("NFC", "connecte");    
     delay(1000);
     display.clearDisplay();
     display.display();
@@ -86,7 +86,7 @@ void setup() {
     }
     drawMessage("erreur", "wifi");
     delay(1000);
-    drawMessage("redémarage", "en cours");
+    drawMessage("redemarage", "en cours");
     delay(1000);
     ESP.restart();
   }
@@ -106,8 +106,6 @@ void loop() {
         if (clearCounter>3){
         clearCounter = 0;
         screenCleared = true;
-        display.clearDisplay();  
-        display.display();
         }
         
         String csn = readCSN();

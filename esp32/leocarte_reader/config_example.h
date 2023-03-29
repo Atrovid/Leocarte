@@ -16,3 +16,5 @@ String  protocol = "";
 //Server certificate if needed
 const char* server_ca = "";
 
+String url = "";
+
