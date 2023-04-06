@@ -121,3 +121,27 @@ Ensuite nous sélectionnons la salle correspondant à notre boitier.
 
 5. A partir de l'identifiant nous récupérons toutes ces informations afin de changer la présence à l'aide d'une requête `put` :
 ```https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/2247997?$select=Id, PlanificationId, TypeRessourceId, Reference, ControlePresence, ProvenancePresence, Presence```
+
+## Prérequis du serveur php :
+
+Le projet utilise la fonction curl, qui provient de l'extension du même nom.
+Pour l'installer : 
+```bash
+sudo apt-get install php-curl
+```
+
+## Configuration du microcontroller ESP32 :
+
+Le projet nécessite l'installation des librairies suivantes sur Arduino IDE :
+- Adafruit_GFX (v1.6.1)
+- Adafruit_SSD1306 (v2.0.2)
+- SoftwareSerial (EspSoftwareSerial v8.0.1)
+- PN532_SWHSU
+- PN532 (Ces deux dernières sont à installer manuellement à partir de : https://github.com/elechouse/PN532)
+
+Il faut ensuite compiler et téléverser le 
+
+Il faut créer un fichier config.h (dans le même dossier que leocarte_reader.ino) à partir du fichier config_example.h
+
+
+
