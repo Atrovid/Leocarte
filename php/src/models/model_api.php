@@ -5,6 +5,7 @@
 
         /**
          * Fonction permettant de faire une requête get qu'importe l'URL.
+         * $request : lien url de la reqête get à effectuer.
          */
         function appelGetAPI($request){
             $cf = parse_ini_file('config.ini');
@@ -103,6 +104,9 @@
 
         /**
          * Cette fonction met un étudiant absent connaissant les informations nécessaire pour faire l'assiduité et l'identifiant de planification ressource de l'étudiant.
+         * $InformayionToPushAbsent : informations requises pour mettre un élève absent.
+         * $IdPlanificationRessource : identifiant de la ressource planification.
+         * $beginURL : début du lien URL pour effectuer la requête.
          */
         function metEtudiantAbsent($InformationToPushAbsent, $IdPlanificationRessource, $beginUrl){
             $cf = parse_ini_file('config.ini');
@@ -126,7 +130,10 @@
         }
 
         /**
-         * Cette fonction permets de mettre tous les étudiants absents. Cette fonction est utilisée au lorsque le premier élève a scanné sa carte.
+         * Cette fonction permet de mettre tous les étudiants absents. Elle est utilisée lorsque le premier élève a scanné sa carte.
+         * $codesEtudiantJSON : Code de chaque étudient récupéré sous format JSON.
+         * $beginURL : début du lien URL pour effectuer la requête.
+         * $idPlanificationCourante : identifiant de la planification courante.
          */
         function metTousEtudiantsAbsents($codesEtudiantJSON, $beginUrl, $idPlanificationCourante){
             $array = json_decode($codesEtudiantJSON, true);
@@ -143,6 +150,10 @@
 
         /**
          * Permet de mettre un étudiant présent de la même manière que nous pouvons le mettre absent.
+         * Cette fonction est appelée dès qu'un élève scanne sa carte.
+         * $InformationToPushPresent : informations requises pour mettre l'élève présent.
+         * $IdPlanificationRessource : identifiant de la ressource planification.
+         * $beginUrl : début du lien URL pour effectuer la requête.
          */
         function metEtudiantPresent($InformationToPushPresent, $IdPlanificationRessource, $beginUrl){
             $cf = parse_ini_file('config.ini');

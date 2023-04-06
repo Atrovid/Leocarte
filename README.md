@@ -119,5 +119,5 @@ Ensuite nous sélectionnons la salle correspondant à notre boitier.
 
 4. En parallèle, nous avons le code de l'étudiant qui nous permet de  regarder si l'étudiant figure dans les ressources ici on a pris "Eva Bailly" pour l'exemple. La requête devient : ```https://graphprojet2ainfo.aimaira.net/GraphV1/Planification/2247994/PlanificationsRessource?$select=Id, Code&$filter=Code eq 'A00081'```
 
-5. A partir de l'identifiant nous récupérons toutes ces informations afin de changer la présence à l'aide d'une requette `put` :
+5. A partir de l'identifiant nous récupérons toutes ces informations afin de changer la présence à l'aide d'une requête `put` :
 ```https://graphprojet2ainfo.aimaira.net/GraphV1/PlanificationRessource/2247997?$select=Id, PlanificationId, TypeRessourceId, Reference, ControlePresence, ProvenancePresence, Presence```
