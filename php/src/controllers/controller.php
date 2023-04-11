@@ -39,16 +39,16 @@
 			$codesEtudiant = $modelAPI->appelGetAPI($url);
 			$modelAPI->metTousEtudiantsAbsents($codesEtudiant, $beginURL, $idPlanificationCourante);
 		} else {
-			$file = fopen($filename, "r+");
+			$file = fopen($filename, "r");
 			$id = fread($file, filesize($filename));
+			fclose($file);
 			if ($id != $idPlanificationCourante) {
-				fwrite($file, $id);
+				$file = fopen($filename, "w");
+				fwrite($file, $idPlanificationCourante);
 				fclose($file);
 				$url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,Code&\$filter=TypeRessourceId%20eq%20".$idTypeRessourceApprenant; //URL pour faire la requête.
 				$codesEtudiant = $modelAPI->appelGetAPI($url);
 				$modelAPI->metTousEtudiantsAbsents($codesEtudiant, $beginURL, $idPlanificationCourante);
-			} else {
-				fclose($file);
 			}
 		}
 
