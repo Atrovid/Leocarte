@@ -5,7 +5,7 @@
 
 	function putPresent($codeEtudiant, $nomSalle){
 		session_start();
-		$beginURL = "https://graphprojet2ainfo.aimaira.net/GraphV1"; //Variable correspondant au début du lien URL pour faire les requêtes à l'API. Ce lien doit être changé pour une autre base de données.
+		$beginURL = "https://graphensicaen.aimaira.net/graphv1"; //Variable correspondant au début du lien URL pour faire les requêtes à l'API. Ce lien doit être changé pour une autre base de données.
 		$modelAPI = new ModelApi();
 
 		/* Récupération des identifiant TypeRessource pour une salle et pour un apprenant */
@@ -13,7 +13,7 @@
 		$idTypeRessourceSalle = $modelAPI->recupererIdTypeRessource($modelAPI->appelGetAPI($url));
 		$url = $beginURL."/TypeRessource/?\$filter=Code%20eq%20'APPRENANT'"; //URL pour faire la requête.
 		$idTypeRessourceApprenant = $modelAPI->recupererIdTypeRessource($modelAPI->appelGetAPI($url));
-		
+
 		/* Récupération de l'identifiant de la salle */
 		$url = $beginURL."/Ressource/?\$filter=TypeRessourceId%20eq%20334210&\$select=Id,Nom"; //URL pour faire la requête.
 		$idSalle = $modelAPI->recupererIdSalle($modelAPI->appelGetAPI($url), $nomSalle);
@@ -28,32 +28,29 @@
 		if ($idPlanificationCourante == 0){
 			return "Erreur/Pas cours";
 		}
-		$dateDebutSeance = $modelAPI->filtrerDateDebut($planifications);
-
-		/* Mise en place d'une session qui va permettre de mettre une seule fois tout
-		le monde absent lorsque la première personne à badger */
-		if (((!isset($_SESSION["planificationCourante"])) || ($idPlanificationCourante != $_SESSION["planificationCourante"]))==1){
-			$_SESSION["planificationCourante"]=$idPlanificationCourante;
-			$_SESSION["estPremier"] = true;
-		}
 		
+		$filename = "./ressources/".$nomSalle.".txt";
 
-		/* Première connexion à ce cours : nous mettons d'abord tout les eleves absents */
-		if ($_SESSION["estPremier"] == true){
+		if (!file_exists($filename)) {
+			$file = fopen($filename, "w");
+			fwrite($file, $idPlanificationCourante);
+			fclose($file);
 			$url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,Code&\$filter=TypeRessourceId%20eq%20".$idTypeRessourceApprenant; //URL pour faire la requête.
 			$codesEtudiant = $modelAPI->appelGetAPI($url);
-			/* Mettre ensemble des étudiants absents */
-			$array = json_decode($codesEtudiant, true);
-				foreach ($array['value'] as $etudiant){
-					$idEtudiant = $etudiant['Code'];
-					$url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$idEtudiant."'";
-					$idPlanificationRessourceEtudiant = $modelAPI->recupererPlanificationRessourceEtudiant($modelAPI->appelGetAPI($url));
-					$url = $beginURL."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
-					$informationsPourMettreAbsent = $modelAPI->appelGetAPI($url);
-					$modelAPI->metEtudiantAbsent($informationsPourMettreAbsent, $idPlanificationRessourceEtudiant, $beginURL);
+			$modelAPI->metTousEtudiantsAbsents($codesEtudiant, $beginURL, $idPlanificationCourante);
+		} else {
+			$file = fopen($filename, "r+");
+			$id = fread($file, filesize($filename));
+			if ($id != $idPlanificationCourante) {
+				fwrite($file, $id);
+				fclose($file);
+				$url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,Code&\$filter=TypeRessourceId%20eq%20".$idTypeRessourceApprenant; //URL pour faire la requête.
+				$codesEtudiant = $modelAPI->appelGetAPI($url);
+				$modelAPI->metTousEtudiantsAbsents($codesEtudiant, $beginURL, $idPlanificationCourante);
+			} else {
+				fclose($file);
 			}
-			$_SESSION["estPremier"] = false;
-		} 
+		}
 
 		/* Mettre l'étudiant présent */
 		$url = $beginURL."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$codeEtudiant."'"; //URL pour faire la requête.

@@ -70,27 +70,6 @@
         }
 
         /**
-         * 
-         */
-        function filtrerDateDebut($planificationsJSON){
-            $array = json_decode($planificationsJSON, true);
-            $id = 0;
-            $dateMaintenant = new DateTime("now");
-
-            foreach ($array['value'] as $planification) {
-                $dateDebutSeance = new DateTime($planification['PlanificationDebut']);
-                $diff = $dateMaintenant->diff($dateDebutSeance);
-                $total_minutes = ($diff->days * 24 * 60); 
-                $total_minutes += ($diff->h * 60); 
-                $total_minutes += $diff->i; 
-                if (($total_minutes <= 60) && ($total_minutes >= -30)) {
-                    $id = $planification['PlanificationId'];
-                    $dateDebutSeance = $planification['PlanificationDebut'];
-                    return $dateDebutSeance;
-                }
-            }
-        }
-        /**
          * Récupére dans la planification courante, l'identifiant correspond à la planification ressource de l'étudiant.
          */
 
@@ -137,14 +116,14 @@
          */
         function metTousEtudiantsAbsents($codesEtudiantJSON, $beginUrl, $idPlanificationCourante){
             $array = json_decode($codesEtudiantJSON, true);
-            print_r($array);
+            //print_r($array);
             foreach ($array['value'] as $etudiant){
                 $idEtudiant = $etudiant['Code'];
                 $url = $beginUrl."/Planification/".$idPlanificationCourante."/PlanificationsRessource?\$select=Id,%20Code&\$filter=Code%20eq%20'".$idEtudiant."'";
-                $idPlanificationRessourceEtudiant = recupererPlanificationRessourceEtudiant(appelGetAPI($url));
+                $idPlanificationRessourceEtudiant = $this->recupererPlanificationRessourceEtudiant($this->appelGetAPI($url));
                 $url = $beginUrl."/PlanificationRessource/".$idPlanificationRessourceEtudiant."?\$select=Id,PlanificationId,TypeRessourceId,Reference,ControlePresence,ProvenancePresence,Presence";
-                $informationsPourMettreAbsent = this->appelGetAPI($url);
-                metEtudiantAbsent($informationsPourMettreAbsent, $idPlanificationRessourceEtudiant, $beginUrl);
+                $informationsPourMettreAbsent = $this->appelGetAPI($url);
+                $this->metEtudiantAbsent($informationsPourMettreAbsent, $idPlanificationRessourceEtudiant, $beginUrl);
             }
         }
 
